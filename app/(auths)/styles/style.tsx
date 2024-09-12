@@ -4,7 +4,7 @@ import { theme } from '@/assets/css/style';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   logo: {
     margin: 'auto',

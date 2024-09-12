@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Image, Alert } from 'react-native';
+import { View, Image, Alert, ScrollView } from 'react-native';
 import { Link, router } from 'expo-router';
 import { Text, TextInput, Button, Card } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -31,6 +31,9 @@ export default function HomeScreen() {
     }
   };
   return (
+    <ScrollView
+      contentContainerStyle={{ flexGrow: 1 }}
+    >
       <View style={styles.container}>
         <Image
           source={require('@/assets/images/logo_fet.png')}
@@ -66,6 +69,7 @@ export default function HomeScreen() {
           </Card.Content>
         </Card>
       </View>
+    </ScrollView>
   );
 }
 

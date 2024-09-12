@@ -14,9 +14,9 @@ import { boolean } from 'yup'
 const routesColumns = [
     { key: 'schedule_start', label: 'Horario inicio' },
     { key: 'schedule_end', label: 'Horario final' },
-    { key: 'longitude', label: 'longitud' },
-    { key: 'lactitude', label: 'latitud' },
-    { key: 'order', label: 'orden' },
+    { key: 'longitude', label: 'Longitud' },
+    { key: 'lactitude', label: 'Latitud' },
+    { key: 'order', label: 'Orden' },
 ];
 
 
@@ -118,7 +118,7 @@ export default function CarRouteScreen() {
                     actions={routesActions}
                 />
 
-                
+
             </ScrollView>
         </View >
     )

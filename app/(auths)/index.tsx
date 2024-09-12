@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import { View, Image, StyleSheet, Alert } from 'react-native';
+import { View, Image, Alert } from 'react-native';
 import { Link, router } from 'expo-router';
-import { Text, TextInput, Button } from 'react-native-paper';
+import { Text, TextInput, Button, Card } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Axios } from '@/resources/axios/axios';
-import { theme } from '@/assets/css/style';
+import { styles } from './styles/style'
 
 export default function HomeScreen() {
-  const [user, setUser] = useState('freiman@gmail.com');
-  const [password, setPassword] = useState('freiman');
+  const [user, setUser] = useState('');
+  const [password, setPassword] = useState('');
   const [hidePass, setHidePass] = useState(true);
 
   const handleLogin = async () => {
@@ -31,57 +31,41 @@ export default function HomeScreen() {
     }
   };
   return (
-    <View style={ styles.container }>
-      <Image
-        source={require('@/assets/images/logo_fet.png')}
-        style={styles.logo}
-      />
-      <Text variant='headlineMedium'>Login</Text>
-      <View>
-          <TextInput
-            mode='outlined'
-            label='Usuario'
-            value={user}
-            onChangeText={(text) => setUser(text)}
-            right={<TextInput.Icon icon='face-man-outline' />}
-          />
-          <TextInput
-            mode='outlined'
-            label='Password'
-            value={password}
-            secureTextEntry = {hidePass}
-            onChangeText={(text) => setPassword(text)}
-            right={<TextInput.Icon icon='eye' onPress={() => setHidePass(!hidePass)}/>}
-          />
-          <Button style={styles.btn} mode="contained" onPress={handleLogin}>
-            Ingresar
-          </Button>
-          <Link style={styles.linkText} href="/register">Registrarme</Link>
+      <View style={styles.container}>
+        <Image
+          source={require('@/assets/images/logo_fet.png')}
+          style={styles.logo}
+        />
+        <Card style={styles.card}>
+          <Card.Content>
+              <Text variant="headlineLarge" style={styles.cardTitle}>Login</Text>
+              <Text style={styles.cardSubtitle}> Aun no tienes cuenta? <Link style={styles.linkText} href="/register"> Registrarme </Link> </Text>
+            <View style={styles.cardBody}>
+                <TextInput
+                  mode='outlined'
+                  label='Usuario'
+                  value={user}
+                  onChangeText={(text) => setUser(text)}
+                  right={<TextInput.Icon icon='account' />}
+                  style={styles.input}
+                />
+                <TextInput
+                  mode='outlined'
+                  label='Password'
+                  value={password}
+                  secureTextEntry = {hidePass}
+                  onChangeText={(text) => setPassword(text)}
+                  right={<TextInput.Icon icon='eye' onPress={() => setHidePass(!hidePass)}/>}
+                  style={styles.input}
+                />
+                
+                <Button style={styles.btn} mode="contained" onPress={handleLogin}>
+                  Ingresar
+                </Button>
+            </View>
+          </Card.Content>
+        </Card>
       </View>
-    </View>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: '30%',
-  },
-  logo: {
-    margin: 'auto',
-    width: 150,
-    height: 70,
-    justifyContent: 'center',
-    alignSelf: 'center'
-  },
-  btn: {
-    marginVertical: 10,
-    marginHorizontal: 100
-  },
-  linkText: {
-    margin: 'auto',
-    fontSize: 16,
-    fontWeight: '600',
-    color: theme.colors.dark,
-  },
-})
+

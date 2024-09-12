@@ -142,45 +142,6 @@ export default function Register() {
                         />
                     </View>
 
-                    {/* <PaperSelect
-                        label="Genero"
-                        value={gender.value}
-                        onSelection={(value) => {
-                            setGender({
-                                ...gender,
-                                value: value.text,
-                                selectedList: value.selectedList,
-                                error: ''
-                            });
-                        }}
-                        arrayList={[...gender.list]}
-                        selectedArrayList={[...gender.selectedList]}
-                        errorText={gender.error}
-                        multiEnable={false}
-                        hideSearchBox={true}
-                        textInputMode="outlined"
-                    /> */}
-
-                    {/* <PaperSelect
-                        label="RH"
-                        value={rh.value}
-                        onSelection={(value: any) => {
-                            setRh({
-                                ...rh,
-                                value: value.selectedList[0]._id,
-                                selectedList: value.selectedList,
-                                error: '',
-                            });
-                        }}
-                        arrayList={[...rh.list]}
-                        selectedArrayList={[...rh.selectedList]}
-                        errorText={rh.error}
-                        multiEnable={false}
-                        hideSearchBox={true}
-                        textInputMode="outlined"
-                    /> */}
-                    
-
                     <TextInput
                         mode='outlined'
                         label='Password'
@@ -211,24 +172,6 @@ export default function Register() {
                             hideMenuHeader={true}
                         />
                     </View>
-                    {/* <PaperSelect
-                        label="Codigo de programa"
-                        value={program.value}
-                        onSelection={(value: any) => {
-                            setProgram({
-                                ...program,
-                                value: value.selectedList[0]._id,
-                                selectedList: value.selectedList,
-                                error: '',
-                            });
-                        }}
-                        arrayList={[...program.list]}
-                        selectedArrayList={[...program.selectedList]}
-                        errorText={rh.error}
-                        multiEnable={false}
-                        hideSearchBox={true}
-                        textInputMode="outlined"
-                    /> */}
 
                     <Button style={styles.btn} mode="contained" onPress={handleRegister}>
                         Registrame

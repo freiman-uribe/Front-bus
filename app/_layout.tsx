@@ -1,5 +1,8 @@
 
 import { useFonts } from 'expo-font';
+import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { useColorScheme } from '@/hooks/useColorScheme';
+
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
@@ -13,6 +16,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const colorScheme = useColorScheme();
   const insets = useSafeAreaInsets();
 
   const [loaded] = useFonts({
@@ -30,13 +34,15 @@ export default function RootLayout() {
   }
   return (
     <PaperProvider theme={theme}>
-      <SafeAreaProvider style={{paddingTop: insets.top, paddingBottom: insets.bottom }}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="(auths)" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-      </SafeAreaProvider>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <SafeAreaProvider style={{paddingTop: insets.top, paddingBottom: insets.bottom }}>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="(auths)" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+        </SafeAreaProvider>
+      </ThemeProvider>
     </PaperProvider>
   );
 }

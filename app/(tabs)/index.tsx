@@ -1,16 +1,10 @@
 import { View, StyleSheet } from 'react-native';
+import { Text } from 'react-native-paper';
 export default function HomeScreen() {
 
   return (
-    <View style={ styles.container }>
-        Home
+    <View>
+        <Text>Home</Text>
     </View>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: '30%',
-  }
-})

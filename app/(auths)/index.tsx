@@ -42,7 +42,7 @@ export default function HomeScreen() {
         <Card style={styles.card}>
           <Card.Content>
               <Text variant="headlineLarge" style={styles.cardTitle}>Login</Text>
-              <Text style={styles.cardSubtitle}> Aun no tienes cuenta? <Link style={styles.linkText} href="/register"> Registrarme </Link> </Text>
+              <Text style={styles.cardSubtitle}> Aún no tienes cuenta? <Link style={styles.linkText} href="/register"> Registrarse </Link> </Text>
             <View style={styles.cardBody}>
                 <TextInput
                   mode='outlined'

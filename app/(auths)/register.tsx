@@ -116,7 +116,7 @@ export default function Register() {
 
                     <TextInput
                         mode='outlined'
-                        label='N° Docuemnto'
+                        label='N° Documento'
                         value={form.document}
                         onChangeText={(text) => setForm({...form, document: text})}
                         right={<TextInput.Icon icon='identifier' />}
@@ -144,7 +144,7 @@ export default function Register() {
 
                     <TextInput
                         mode='outlined'
-                        label='Password'
+                        label='Contraseña'
                         value={form.password}
                         secureTextEntry = {hidePass}
                         onChangeText={(text) => { setForm({...form, password: text}) }}
@@ -154,7 +154,7 @@ export default function Register() {
 
                     <TextInput
                         mode='outlined'
-                        label='Codigop de estudiante'
+                        label='Código de estudiante'
                         value={form.code_student}
                         onChangeText={(text) => setForm({...form, code_student: text})}
                         right={<TextInput.Icon icon='two-factor-authentication' />}
@@ -164,7 +164,7 @@ export default function Register() {
 
                     <View style={styles.input}>
                         <Dropdown
-                            label='Codigo de programa'
+                            label='Código de programa'
                             mode='outlined'
                             onSelect={(text) => setForm({...form, code_program: text})}
                             options={programList}
@@ -174,7 +174,7 @@ export default function Register() {
                     </View>
 
                     <Button style={styles.btn} mode="contained" onPress={handleRegister}>
-                        Registrame
+                        Registrase
                     </Button>
                 </View>
             </Card.Content>

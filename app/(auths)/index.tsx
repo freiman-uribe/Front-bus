@@ -13,11 +13,11 @@ export default function HomeScreen() {
 
   const handleLogin = async () => {
     try {
-      const response = await Axios.post('/auth/login', {
+      const { data } = await Axios.post('/auth/login', {
         "email": user,
         password
       });
-      const { data } = response.data;
+
       const accessToken = data.access_token;
       const refreshToken = data.refresh_token;
 

@@ -9,11 +9,11 @@ headers: {
 });
 
 
-// Axios.interceptors.response.use(
-//   (response) => {
-//     return response.data;
-//   },
-//   (error) => {
-//     return Promise.reject(error);
-//   }
-// );
+Axios.interceptors.response.use(
+  (response) => {
+    return response.data;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);

@@ -36,7 +36,7 @@ export default function Register() {
     const listRH = async () => {
         try {
             const { data } = await Axios.get('/common/list-types?codes=type_rh')
-            const formatRh = formattedSelect(data.data[0].listItem)
+            const formatRh = formattedSelect(data[0].listItem)
             setRhList(formatRh)
         } catch (error) {
             console.error('🚀 ~ listRH ~ error:', error)
@@ -46,7 +46,7 @@ export default function Register() {
     const listCodeProgram = async () => {
         try {
             const { data } = await Axios.get('/common/programs')
-            const formatPrograms = formattedSelect(data.data)
+            const formatPrograms = formattedSelect(data)
             setProgramList(formatPrograms)
         } catch (error) {
             console.error('🚀 ~ listCodeProgram ~ error:', error)

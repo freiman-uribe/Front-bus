@@ -1,9 +1,5 @@
 
-import { useState, useEffect } from 'react';
 import { Text, View } from 'react-native';
-import { router } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Button } from 'react-native-paper';
 
 export default function TabTwoScreen() {
 

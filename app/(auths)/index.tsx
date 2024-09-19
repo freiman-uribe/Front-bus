@@ -24,7 +24,7 @@ export default function HomeScreen() {
       await AsyncStorage.setItem('accessToken', accessToken);
       await AsyncStorage.setItem('refreshToken', refreshToken);
 
-      router.replace('/(car_route)');
+      router.replace('/(admin)');
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
       Alert.alert('Error', 'Ha ocurrido un problema al iniciar sesión');

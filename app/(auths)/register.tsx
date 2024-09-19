@@ -4,6 +4,7 @@ import { Link, router } from 'expo-router';
 import { Text, TextInput, Button, Card } from 'react-native-paper';
 import { Dropdown } from 'react-native-paper-dropdown';
 import { Axios } from '@/resources/axios/axios';
+import { formattedSelect } from '@/resources/helpers';
 import { styles } from './styles/style'
 
 export default function Register() {
@@ -51,13 +52,6 @@ export default function Register() {
         } catch (error) {
             console.error('🚀 ~ listCodeProgram ~ error:', error)
         }
-    }
-
-    const formattedSelect = (data:[]) => {
-        return (data||[]).map((item: any) => ({
-            value: item.id,
-            label: item.name,
-        }));
     }
 
     const resetForm = () => setForm({
@@ -122,15 +116,7 @@ export default function Register() {
                         right={<TextInput.Icon icon='identifier' />}
                         style={styles.input}
                     />
-                    
-                    {/* <Dropdown
-                        label={'Gender'}
-                        mode='outlined'
-                        onSelect={setGg}
-                        options={genderList}
-                        value={gg}
-                        hideMenuHeader={true}
-                    /> */}
+
                     <View style={styles.input}>
                         <Dropdown
                             label='RH'

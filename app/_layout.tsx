@@ -13,6 +13,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { theme } from '@/assets/css/style'
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { UserAvatar } from '@/components/navigation/UserAvatar';
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -36,9 +37,17 @@ export default function RootLayout() {
     <PaperProvider theme={theme}>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <SafeAreaProvider
-          style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
+          style={{ paddingBottom: insets.bottom }}
+          // style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
         >
           <Stack>
+            <Stack.Screen
+              name="(admin)"
+              options={{
+                headerTitle: '',
+                headerRight: () => <UserAvatar />,
+              }}
+            />
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="(auths)" options={{ headerShown: false }} />
             <Stack.Screen name="(car_route)" options={{ headerShown: false }} />

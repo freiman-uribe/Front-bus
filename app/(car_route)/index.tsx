@@ -94,27 +94,25 @@ export default function CarRouteScreen() {
     );
 
     return (
-        <View style={styles.container}>
-            <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={styles.topContainer}>
-                    <ButtonBack />
-                    <Button
-                        mode="contained"
-                        onPress={() => router.push('/(create-car-route)')}
-                        style={styles.buttonAdd}
-                    >
-                        Agregar
-                    </Button>
-                </View>
-                <Text style={styles.title}>Rutas de Buses</Text>
-                <CustomDatatable
-                    data={carRoutesData}
-                    columns={routesColumns}
-                    actions={routesActions}
-                />
-
-
-            </ScrollView>
-        </View >
-    )
+      <View style={styles.container}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={styles.topContainer}>
+            <ButtonBack />
+            <Button
+              mode="contained"
+              onPress={() => router.push("/create_car_rute/create")}
+              style={styles.buttonAdd}
+            >
+              Agregar
+            </Button>
+          </View>
+          <Text style={styles.title}>Rutas de Buses</Text>
+          <CustomDatatable
+            data={carRoutesData}
+            columns={routesColumns}
+            actions={routesActions}
+          />
+        </ScrollView>
+      </View>
+    );
 }

@@ -7,8 +7,8 @@ import { Axios } from '@/resources/axios/axios';
 import { styles } from './styles/style'
 
 export default function HomeScreen() {
-  const [user, setUser] = useState('');
-  const [password, setPassword] = useState('');
+  const [user, setUser] = useState('freiman@gmail.com');
+  const [password, setPassword] = useState('freiman');
   const [hidePass, setHidePass] = useState(true);
 
   const handleLogin = async () => {
@@ -24,7 +24,7 @@ export default function HomeScreen() {
       await AsyncStorage.setItem('accessToken', accessToken);
       await AsyncStorage.setItem('refreshToken', refreshToken);
 
-      router.replace('/(tabs)/explore');
+      router.replace('/(car_route)');
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
       Alert.alert('Error', 'Ha ocurrido un problema al iniciar sesión');

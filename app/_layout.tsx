@@ -34,12 +34,14 @@ export default function RootLayout() {
   }
   return (
     <PaperProvider theme={theme}>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <SafeAreaProvider style={{paddingTop: insets.top, paddingBottom: insets.bottom }}>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <SafeAreaProvider
+          style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
+        >
           <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="(auths)" options={{ headerShown: false }} />
-            <Stack.Screen name='(car-route)' options={{headerShown: false}} />
+            <Stack.Screen name="(car_route)" options={{ headerShown: false }} />
             <Stack.Screen name="+not-found" />
           </Stack>
         </SafeAreaProvider>

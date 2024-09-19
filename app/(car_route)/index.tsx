@@ -2,14 +2,13 @@ import { View, ScrollView, Alert } from 'react-native'
 import { useCallback, useEffect, useState } from 'react'
 import { Button, Text } from 'react-native-paper'
 import { styles } from './styles/style'
-import { Link, router } from 'expo-router'
+import { router } from 'expo-router'
 import CustomDatatable from '@/components/datatable/datatable'
 import ButtonBack from '@/components/ButtonBack'
 import { Axios } from '@/resources/axios/axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { format } from 'date-fns'
 import { useFocusEffect } from '@react-navigation/native'
-import { boolean } from 'yup'
 
 const routesColumns = [
     { key: 'schedule_start', label: 'Horario inicio' },
@@ -19,8 +18,6 @@ const routesColumns = [
     { key: 'order', label: 'Orden' },
 ];
 
-
-
 export default function CarRouteScreen() {
     const [carRoutesData, setCarRoutesData] = useState([]);
 
@@ -28,8 +25,6 @@ export default function CarRouteScreen() {
         editUrl: true,
         delete: (id: string) => handleDelete(id),
     };
-
-
 
     const handleDelete = async (id: string) => {
         // Mostrar un mensaje de confirmación antes de eliminar

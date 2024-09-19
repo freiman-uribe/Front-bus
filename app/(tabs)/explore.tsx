@@ -10,7 +10,6 @@ export default function TabTwoScreen() {
   return (
     <View>
       <Text> Explore</Text>
-      <Button  onPress={() => router.push('/(car-route)')}>Go to car-route</Button>
     </View>
   );
 }

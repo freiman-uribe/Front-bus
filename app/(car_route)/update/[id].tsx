@@ -7,17 +7,21 @@ import * as Yup from 'yup';
 import ButtonBack from '@/components/ButtonBack';
 import { Axios } from '@/resources/axios/axios';
 import { router, useLocalSearchParams } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { styles } from './styles/style';
 import { NumberInput } from '@/components/NumberInput';
-import { format } from 'date-fns';
 
 const schema = Yup.object().shape({
-  scheduleStart: Yup.date().required('La fecha de inicio es obligatoria'),
-  scheduleEnd: Yup.date()
-    .required('La fecha final es obligatoria')
-    .min(Yup.ref('scheduleStart'), 'La fecha final debe ser posterior a la de inicio'),
+  scheduleStart: Yup.string()
+    .required('La hora de inicio es obligatoria')
+    .matches(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Formato de hora inválido (HH:mm)'),
+  scheduleEnd: Yup.string()
+    .required('La hora final es obligatoria')
+    .matches(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Formato de hora inválido (HH:mm)')
+    .test('is-greater', 'La hora final debe ser posterior a la de inicio', function (value) {
+      const { scheduleStart } = this.parent;
+      return value ? value > scheduleStart : false;
+    }),
   lactitude: Yup.number()
     .typeError('La latitud debe ser un número')
     .required('La latitud es obligatoria'),
@@ -31,23 +35,21 @@ const schema = Yup.object().shape({
 
 export default function UpdateCarRouteScreen() {
   const [showPicker, setShowPicker] = useState(false);
-  const [pickerMode, setPickerMode] = useState<'date' | 'time'>('date');
   const [currentInput, setCurrentInput] = useState<'scheduleStart' | 'scheduleEnd'>('scheduleStart');
-  const [isLoading, setIsLoading] = useState(true);
   const { id } = useLocalSearchParams(); // Obtén el ID de la ruta desde los parámetros
-  const [routeData, setRouteData] = useState(null);
 
   const {
     control,
     handleSubmit,
     setValue,
     getValues,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      scheduleStart: new Date(),
-      scheduleEnd: new Date(),
+      scheduleStart: '',
+      scheduleEnd: '',
       lactitude: 0,
       longitude: 0,
       order: 0,
@@ -55,88 +57,42 @@ export default function UpdateCarRouteScreen() {
   });
 
   useEffect(() => {
-    // Cargar los datos de la ruta por su ID
     const fetchRouteData = async () => {
       try {
-        const token = await AsyncStorage.getItem('accessToken');
-        if (!token) {
-          Alert.alert('Error', 'No se pudo obtener el token de acceso.');
-          return;
-        }
-
-        const response = await Axios.get(`/car-route/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        setRouteData(response.data);
-        // Setea los valores en el formulario
-        setValue('scheduleStart', new Date(response.data.schedule_start));
-        setValue('scheduleEnd', new Date(response.data.schedule_end));
-        setValue('lactitude', response.data.lactitude);
-        setValue('longitude', response.data.longitude);
-        setValue('order', response.data.order);
+        const { data } = await Axios.get(`/car-route/${id}`);
+        setValue('scheduleStart', data.scheduleStart);
+        setValue('scheduleEnd', data.scheduleEnd);
+        setValue('lactitude', data.lactitude);
+        setValue('longitude', data.longitude);
+        setValue('order', data.order);
       } catch (error) {
         Alert.alert('Error', 'No se pudo cargar la información de la ruta.');
         console.error('Error al cargar la ruta:', error);
-      } finally {
-        setIsLoading(false);
       }
     };
 
     fetchRouteData();
-  }, [id, setValue]);
+  }, [id, setValue, router]);
 
-  const handleDateChange = (event: any, selectedDate?: Date) => {
-    if (event.type === 'set' && selectedDate) {
-      if (pickerMode === 'date') {
-        setPickerMode('time');
-        setShowPicker(true);
-        setValue(currentInput, selectedDate);
-      } else {
-        const currentDate = getValues(currentInput);
-        const updatedDate = new Date(currentDate.setHours(selectedDate.getHours(), selectedDate.getMinutes()));
-        setValue(currentInput, updatedDate);
-        setShowPicker(false);
-        setPickerMode('date');
-      }
-    } else {
-      setShowPicker(false);
-      setPickerMode('date');
+  const handleTimeChange = (event: any, selectedTime?: Date) => {
+    if (event.type === 'set' && selectedTime) {
+      const formattedTime = `${String(selectedTime.getHours()).padStart(2, '0')}:${String(selectedTime.getMinutes()).padStart(2, '0')}`;
+      setValue(currentInput, formattedTime);
     }
+    setShowPicker(false);
   };
-
-  const formatDateTime = (date: Date) => format(date, 'dd/MM/yyyy hh:mm a');
 
   const onSubmit = async (data: any) => {
     try {
-      const token = await AsyncStorage.getItem('accessToken');
-      if (!token) {
-        Alert.alert('Error', 'No se pudo obtener el token de acceso.');
-        return;
-      }
-
-      await Axios.put(`/car-route/${id}`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
+      await Axios.put(`/car-route/${id}`, data);
       Alert.alert('Ruta de bus actualizada', 'La ruta de bus se ha actualizado correctamente');
+      reset();
       router.back();
     } catch (error: any) {
-      if (error.response) {
-        const serverMessage = error.response.data?.message || JSON.stringify(error.response.data);
-        Alert.alert('Error', `No se pudo actualizar la ruta de bus: ${serverMessage}`);
-      } else {
-        Alert.alert('Error', 'No se pudo actualizar la ruta de bus. Por favor, intenta de nuevo.');
-      }
-      console.error('Error al actualizar la ruta de bus:', error);
+      const serverMessage = error.response?.data?.message || 'No se pudo actualizar la ruta de bus.';
+      Alert.alert('Error', serverMessage);
     }
   };
-
-  if (isLoading) {
-    return <ActivityIndicator size="large" style={styles.loading} />;
-  }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -145,14 +101,13 @@ export default function UpdateCarRouteScreen() {
       </View>
 
       <TextInput
-        label="Fecha y hora de inicio"
+        label="Hora de inicio"
         mode='outlined'
-        value={formatDateTime(getValues('scheduleStart'))}
-        right={<TextInput.Icon icon='calendar' />}
+        value={getValues('scheduleStart')}
+        right={<TextInput.Icon icon='clock' />}
         style={{ marginBottom: 10 }}
         onFocus={() => {
           setCurrentInput('scheduleStart');
-          setPickerMode('date');
           setShowPicker(true);
         }}
         error={!!errors.scheduleStart}
@@ -160,14 +115,13 @@ export default function UpdateCarRouteScreen() {
       {errors.scheduleStart && <HelperText type="error">{errors.scheduleStart.message}</HelperText>}
 
       <TextInput
-        label="Fecha y hora de fin"
+        label="Hora de fin"
         mode='outlined'
+        value={getValues('scheduleEnd')}
+        right={<TextInput.Icon icon='clock' />}
         style={{ marginBottom: 10 }}
-        value={formatDateTime(getValues('scheduleEnd'))}
-        right={<TextInput.Icon icon='calendar' />}
         onFocus={() => {
           setCurrentInput('scheduleEnd');
-          setPickerMode('date');
           setShowPicker(true);
         }}
         error={!!errors.scheduleEnd}
@@ -176,9 +130,9 @@ export default function UpdateCarRouteScreen() {
 
       {showPicker && (
         <DateTimePicker
-          mode={pickerMode}
-          value={getValues(currentInput)}
-          onChange={handleDateChange}
+          mode='time'
+          value={new Date()}
+          onChange={handleTimeChange}
           display={Platform.OS === 'ios' ? 'inline' : 'default'}
         />
       )}
@@ -186,19 +140,22 @@ export default function UpdateCarRouteScreen() {
       <NumberInput
         control={control}
         name="lactitude"
-        label="Latitud" errors={errors}
+        label="Latitud"
+        errors={errors}
         icon={'map-marker'}
       />
       <NumberInput
         control={control}
         name="longitude"
-        label="Longitud" errors={errors}
+        label="Longitud"
+        errors={errors}
         icon={'map-marker'}
       />
       <NumberInput
         control={control}
         name="order"
-        label="Orden" errors={errors}
+        label="Orden"
+        errors={errors}
         icon={'map-marker'}
       />
 

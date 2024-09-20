@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, Alert, Platform, ActivityIndicator } from 'react-native';
+import { View, ScrollView, Alert, Platform } from 'react-native';
 import { Button, HelperText, TextInput } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -42,7 +42,7 @@ export default function UpdateCarRouteScreen() {
     control,
     handleSubmit,
     setValue,
-    getValues,
+    watch,
     reset,
     formState: { errors },
   } = useForm({
@@ -55,6 +55,9 @@ export default function UpdateCarRouteScreen() {
       order: 0,
     },
   });
+
+  const watchScheduleStart = watch('scheduleStart');
+  const watchScheduleEnd = watch('scheduleEnd');
 
   useEffect(() => {
     const fetchRouteData = async () => {
@@ -103,7 +106,7 @@ export default function UpdateCarRouteScreen() {
       <TextInput
         label="Hora de inicio"
         mode='outlined'
-        value={getValues('scheduleStart')}
+        value={watchScheduleStart}
         right={<TextInput.Icon icon='clock' />}
         style={{ marginBottom: 10 }}
         onFocus={() => {
@@ -117,7 +120,7 @@ export default function UpdateCarRouteScreen() {
       <TextInput
         label="Hora de fin"
         mode='outlined'
-        value={getValues('scheduleEnd')}
+        value={watchScheduleEnd}
         right={<TextInput.Icon icon='clock' />}
         style={{ marginBottom: 10 }}
         onFocus={() => {

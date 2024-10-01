@@ -34,6 +34,19 @@ export default function TabLayout() {
           tabBarIcon: () => null,
         }}
       />
+      <Tabs.Screen
+        name="plans"
+        options={{
+          title: "Planes",
+          
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "wallet" : "wallet-outline"}
+              color={color}
+            />
+          ),
+        }}
+      />
     </Tabs>
   );
 }

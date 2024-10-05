@@ -1,0 +1,5 @@
+export const BUS_DRIVER_STATUS = {
+  PICKING: 'PICKING',
+  DRIVING: 'DRIVING',
+  STOP: 'STOP'	
+}

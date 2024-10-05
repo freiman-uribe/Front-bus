@@ -5,10 +5,12 @@ import { Text, TextInput, Button, Card } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Axios } from '@/resources/axios/axios';
 import { styles } from './styles/style'
+import { jwtDecode } from 'jwt-decode';
+import { ROLES } from '@/constants/Rol';
 
 export default function HomeScreen() {
-  const [user, setUser] = useState('freiman@gmail.com');
-  const [password, setPassword] = useState('freiman');
+  const [user, setUser] = useState('ander_co@fet.com');
+  const [password, setPassword] = useState('hola.123');
   const [hidePass, setHidePass] = useState(true);
 
   const handleLogin = async () => {
@@ -21,12 +23,18 @@ export default function HomeScreen() {
       const accessToken = data.access_token;
       const refreshToken = data.refresh_token;
 
+      const decodedToken = jwtDecode(accessToken) as any;
+
       await AsyncStorage.setItem('accessToken', accessToken);
       await AsyncStorage.setItem('refreshToken', refreshToken);
-
-      router.replace('/(admin)');
+      const cases = {
+        [ROLES.ADMIN]: '/(admin)',
+        [ROLES.STUDENT]: '/(student)',
+        [ROLES.DRIVER_BUS]: '/(driver)',
+      }
+      router.replace(cases[decodedToken.rol] || '/(auths)' as any);
     } catch (error) {
-      console.error('Error al iniciar sesión:', error);
+      console.error('Error al iniciar sesión:', JSON.stringify(error));
       Alert.alert('Error', 'Ha ocurrido un problema al iniciar sesión');
     }
   };

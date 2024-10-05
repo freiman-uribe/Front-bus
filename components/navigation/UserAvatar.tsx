@@ -38,26 +38,22 @@ export const UserAvatar = () => {
   };
 
   return (
-    <View>
+    // <View>
       <Menu
-          style={styles.menuAvatar}
           visible={visible}
           onDismiss={closeMenu}
           anchor={
             <Button style={styles.avatarButton} onPress={openMenu}>
-              <Avatar.Text size={50} label="FU" />
+              <Avatar.Text size={40} label="FU" />
             </Button>
           }>
           <Menu.Item onPress={logout} title="Cerrar Sesión" />
         </Menu>
-    </View>
+    // </View>
   );
 }
 
 const styles = StyleSheet.create({
-  menuAvatar: {
-    marginTop: 80
-  },
   avatarButton: {
     width: '100%'
   }

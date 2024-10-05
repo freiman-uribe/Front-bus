@@ -2,7 +2,7 @@
 import { Axios } from '@/resources/axios/axios';
 import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Card, Text, Modal, Portal, PaperProvider } from 'react-native-paper';
 import { es } from 'date-fns/locale';
 import { format, parseISO } from 'date-fns';
@@ -10,32 +10,20 @@ import QRCode from 'react-native-qrcode-svg';
 import { BUS_DRIVER_STATUS } from '@/constants/Driver';
 import { Camera, useCameraDevice, useCameraPermission, useCodeScanner } from 'react-native-vision-camera';
 import { PERMISSIONS, request, RESULTS } from 'react-native-permissions';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
 
-export default function Car() {
+export default function Car( { navigation }:any ) {
   const [listAssing, setListAssing] = useState([]);
   const [isModalQr, setIsModalQr] = useState(false)
   const [dataQr, setDataQr] = useState(null)
-  const getAssignCarRoutes = async () => {
+
+
+  const getBusDriverData = async () => {
     try {
-      const { data } = await Axios.get<any>("/bus-driver-manager/get-assigned-driver");
+      const { data } = await Axios.post<any>("/student-handler/get-bus-driver");
       setListAssing(data)
-    } catch (error) {
-      console.error("🚀 ~ listRH ~ error:", error);
-    }
-  };
-
-  useEffect(() => {
-    getAssignCarRoutes()
-  }, [])
-
-  const handleGenerateQr = async (id:string) => {
-    try {
-      const { data } = await Axios.post<any>("/bus-driver-manager/generate-qr", {
-        bus_driver_id: id,
-        status: BUS_DRIVER_STATUS.PICKING
-      });
-      setDataQr(data)
-      setIsModalQr(true)
+      console.log('🚀 ~ getBusDriverData ~ data:', data)
     } catch (error) {
       console.error("🚀 ~ listRH ~ error:", error);
     }
@@ -45,31 +33,16 @@ export default function Car() {
   const { hasPermission, requestPermission  } = useCameraPermission()
 
   useEffect(() => {
-    if (!hasPermission) {
-      requestPermission()
-    }
-  }, [hasPermission])
-  if (!hasPermission) return <Text>No tiene permisos</Text>
-  if (device == null) return  <Text>No tiene camara xd</Text>
+    getBusDriverData()
+  }, [])
 
-  const [scannedCode,setCodeScanned] = useState<any>(null)
-  const codeScanner = useCodeScanner({
-    codeTypes: ['qr'],
-    onCodeScanned: codes => {
-      if (codes.length > 0) {
-        if (codes[0].value) {
-          console.log(codes[0].value, 'escaneado')
-          setTimeout(() => setCodeScanned(codes[0]?.value), 500);
-        }
-      }
-      return;
-    },
-  });
 
+  const handleEntrada = async (id:string) => {
+    router.replace('/(student)/register_qr' as any);
+  }
   return (
     <ScrollView >
-
-      <Text style={styles.title} >Pagina de condutor</Text>
+      <Text style={styles.title} >Pagina de estudiante</Text>
       <View style={styles.container}>
         {
           listAssing.map((driverBus:any) => (
@@ -81,31 +54,34 @@ export default function Car() {
               </Card.Content>
               <Card.Actions>
                 {/* <Button>Cancel</Button> */}
-                <Button onPress={() => handleGenerateQr(driverBus.id)}>Recoger</Button>
+                <Button onPress={() => handleEntrada(driverBus.id)}>Registrar entrada</Button>
               </Card.Actions>
             </Card>
           ))
         }
       </View>
-      <Portal>
-        <Modal visible={isModalQr} onDismiss={() => setIsModalQr(false)} contentContainerStyle={styles.modal}>
-          <Text>QR</Text>
-          <QRCode
-            value={JSON.stringify(dataQr)}
-            size={200}
-          />
-        </Modal>
-      </Portal>
+      {/* <Camera
+        style={StyleSheet.absoluteFillObject}
+        device={device}
+        isActive={true}
+        codeScanner={codeScanner}
+      />  */}
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   title: {
     fontSize: 20,
-  },
-  container: {
-    padding: 20
   },
   modal: {
     margin:20,

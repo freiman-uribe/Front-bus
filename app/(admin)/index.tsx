@@ -8,7 +8,6 @@ export default function Car() {
   return (
     <ScrollView >
       <Text>hola</Text>
-      <Button onPress={() => router.push('/(car_route)/')}>car routes</Button>
     </ScrollView>
   );
 }

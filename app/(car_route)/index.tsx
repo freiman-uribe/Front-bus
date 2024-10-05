@@ -6,13 +6,11 @@ import { router } from 'expo-router'
 import CustomDatatable from '@/components/datatable/datatable'
 import ButtonBack from '@/components/ButtonBack'
 import { Axios } from '@/resources/axios/axios'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { format } from 'date-fns'
 import { useFocusEffect } from '@react-navigation/native'
 
 const routesColumns = [
-    { key: 'schedule_start', label: 'Horario inicio' },
-    { key: 'schedule_end', label: 'Horario final' },
+    { key: 'scheduleStart', label: 'Horario inicio' },
+    { key: 'scheduleEnd', label: 'Horario final' },
     { key: 'longitude', label: 'Longitud' },
     { key: 'lactitude', label: 'Latitud' },
     { key: 'order', label: 'Orden' },
@@ -40,12 +38,7 @@ export default function CarRouteScreen() {
                     text: 'Eliminar',
                     onPress: async () => {
                         try {
-                            const accessToken = await getAccessToken();
-                            await Axios.delete(`/car-route/${id}`, {
-                                headers: {
-                                    Authorization: `Bearer ${accessToken}`
-                                }
-                            });
+                            await Axios.delete(`/car-route/${id}`);
                             // Recargar los datos después de la eliminación
                             getCarRoutes();
                         } catch (error) {
@@ -57,31 +50,12 @@ export default function CarRouteScreen() {
             { cancelable: false }
         );
     };
-    const getAccessToken = async () => {
-        try {
-            const token = await AsyncStorage.getItem('accessToken');
-            return token;
-        } catch (error) {
-            console.error('Error al obtener token:', error);
-        }
-    };
+
 
     const getCarRoutes = async () => {
         try {
-            const accessToken = await getAccessToken();
-            const { data } = await Axios.get('/car-route', {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            });
-
-            const formattedData = data.map((route: any) => ({
-                ...route,
-                schedule_start: format(new Date(route.schedule_start), 'dd/MM/yyyy HH:mm'),
-                schedule_end: format(new Date(route.schedule_end), 'dd/MM/yyyy HH:mm'),
-            }));
-
-            setCarRoutesData(formattedData);
+            const { data } = await Axios.get('/car-route');
+            setCarRoutesData(data);
         } catch (error) {
             console.error('Error al obtener rutas de buses:', error);
         }

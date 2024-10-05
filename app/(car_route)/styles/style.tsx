@@ -16,12 +16,8 @@ export const styles = StyleSheet.create({
     },
     buttonAdd: {
         borderRadius: 50,
-        width: 150,
-        height: 60,
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 0,
-        margin: 8,
     },
     title: {
         fontSize: 24,

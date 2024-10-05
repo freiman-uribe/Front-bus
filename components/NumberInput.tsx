@@ -8,9 +8,10 @@ type NumberInputProps = {
   label: any;
   errors: any;
   icon?: string;
+  defaultValue?: string;
 };
 
-export const NumberInput = ({ control, name, label, errors, icon = '' }: NumberInputProps) => (
+export const NumberInput = ({ control, name, label, errors, icon = '', defaultValue }: NumberInputProps) => (
   <Controller
     control={control}
     name={name}
@@ -26,6 +27,7 @@ export const NumberInput = ({ control, name, label, errors, icon = '' }: NumberI
           onChangeText={onChange}
           keyboardType="numeric"
           style={{ marginBottom: 10 }}
+          defaultValue={defaultValue}
         />
         {errors[name] && <HelperText type="error">{errors[name].message}</HelperText>}
       </>

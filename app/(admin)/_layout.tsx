@@ -34,6 +34,32 @@ export default function TabLayout() {
           tabBarIcon: () => null,
         }}
       />
+      <Tabs.Screen
+        name="plans"
+        options={{
+          title: "Planes",
+          
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "wallet" : "wallet-outline"}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="car-route"
+        options={{
+          title: "Rutas",
+          
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "bus" : "bus-outline"}
+              color={color}
+            />
+          ),
+        }}
+      />
     </Tabs>
   );
 }

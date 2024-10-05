@@ -79,10 +79,6 @@ export default function CreateCarRouteScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.topContainer}>
-        <ButtonBack />
-      </View>
-
       <TextInput
         label="Hora de inicio"
         mode='outlined'

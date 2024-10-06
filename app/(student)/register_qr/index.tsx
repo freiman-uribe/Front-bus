@@ -13,7 +13,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 
-export default function Car( { navigation }:any ) {
+export default function RegisterQr( { navigation }:any ) {
   const [isModalQr, setIsModalQr] = useState(false)
   const [errorModal, setErrorModal] = useState(false)
   const [messageError, setMessageError] = useState('')
@@ -69,12 +69,6 @@ export default function Car( { navigation }:any ) {
         isActive={true}
         codeScanner={codeScanner}
       />
-      <View style={styles.backButton}>
-        <Button  style={{backgroundColor: 'white', marginTop: 10, marginLeft: 10}} onPress={() => {
-          setIsModalQr(false)
-          router.back()
-        }}>Volver</Button>
-      </View>
       <Portal>
         <Modal dismissable={false} visible={isModalQr} onDismiss={() => setIsModalQr(false)} contentContainerStyle={styles.modal}>
           <Text>Entrada registrada correctamente</Text>

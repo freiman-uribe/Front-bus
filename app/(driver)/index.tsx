@@ -2,14 +2,19 @@
 import { Axios } from '@/resources/axios/axios';
 import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { Button, Card, Text, Modal, Portal, PaperProvider } from 'react-native-paper';
+import { Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { Button, Card, Text, Modal, Portal, PaperProvider, Appbar } from 'react-native-paper';
 import { es } from 'date-fns/locale';
 import { format, parseISO } from 'date-fns';
 import QRCode from 'react-native-qrcode-svg';
 import { BUS_DRIVER_STATUS } from '@/constants/Driver';
 import { Camera, useCameraDevice, useCameraPermission, useCodeScanner } from 'react-native-vision-camera';
 import { PERMISSIONS, request, RESULTS } from 'react-native-permissions';
+import { UserAvatar } from '@/components/navigation/UserAvatar';
+import { useSession } from '@/hooks/useSession';
+import { theme } from '@/assets/css/style';
+
+const MORE_ICON = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
 
 export default function Car() {
   const [listAssing, setListAssing] = useState([]);
@@ -44,6 +49,8 @@ export default function Car() {
   const device = useCameraDevice('back')
   const { hasPermission, requestPermission  } = useCameraPermission()
 
+  const {session} = useSession()
+
   useEffect(() => {
     if (!hasPermission) {
       requestPermission()
@@ -67,22 +74,26 @@ export default function Car() {
   });
 
   return (
-    <ScrollView >
-
-      <Text style={styles.title} >Pagina de condutor</Text>
-      <View style={styles.container}>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false} >
+      <Text style={styles.title}>¡Hola, {session?.full_name} {session?.last_name}!</Text>
+      <View>
         {
           listAssing.map((driverBus:any) => (
-            <Card>
-              <Card.Title title="Ruta 1" subtitle={`Hora de recogida: ${ format(parseISO(driverBus.route.schedule_start), 'hh:mm a', { locale: es }) }`}  />
+            <Card style={styles.card}>
+              <Card.Title
+                title="Ruta 1"
+                subtitle={
+                  <View >
+                    <Text>{`Hora de recogida: ${ format(parseISO(driverBus.route.schedule_start), 'hh:mm a', { locale: es }) }`}</Text>
+                  </View>
+                }
+                right={() => <Button style={{marginRight: 10}} compact mode='text'  onPress={() => handleGenerateQr(driverBus.id)}>Recoger</Button>}
+              >
+                </Card.Title>
               <Card.Content>
-                <Text variant="titleLarge">Card title</Text>
-                <Text variant="bodyMedium">Card content</Text>
+                <Text style={styles.cardText}>Latitud: {driverBus.route.lactitude}</Text>
+                <Text style={styles.cardText}>Longitud: {driverBus.route.longitude}</Text>
               </Card.Content>
-              <Card.Actions>
-                {/* <Button>Cancel</Button> */}
-                <Button onPress={() => handleGenerateQr(driverBus.id)}>Recoger</Button>
-              </Card.Actions>
             </Card>
           ))
         }
@@ -101,11 +112,25 @@ export default function Car() {
 }
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 20,
-  },
   container: {
-    padding: 20
+    backgroundColor: 'white',
+    padding: 20,
+  },
+  card: {
+    margin: 5,
+    borderRadius: 10,
+    backgroundColor: 'white',
+    elevation: 0
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginTop: 16,
+    marginBottom: 10,
+  },
+  subtitle: {
+    color: theme.colors.primary,
+    marginBottom: 10,
   },
   modal: {
     margin:20,
@@ -113,5 +138,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'white', padding: 20,
     alignItems: 'center',
     justifyContent: 'center'
-  }
+  },
+  cardText: {
+    fontSize: 14,
+    color: '#444',
+      marginVertical: 4,
+  },
 })

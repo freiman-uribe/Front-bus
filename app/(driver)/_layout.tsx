@@ -5,6 +5,10 @@ import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { UserAvatar } from '@/components/navigation/UserAvatar';
+import { Platform } from 'react-native';
+import { Appbar } from 'react-native-paper';
+
+
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -12,13 +16,21 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        headerShown: false,
+        headerShown: true,
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home2",
+          headerRight:() => <UserAvatar />,
+          title: 'Inicio',
+          headerTitleAlign: "center",
+          headerStyle: {
+            elevation:4,
+            shadowColor: "black",
+            shadowRadius: 1,
+            shadowOpacity: 1
+          },
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "home" : "home-outline"}

@@ -104,7 +104,6 @@ export default function CarRouteScreen() {
         value={searchQuery}
         style={styles.searchbar}
       />
-
       
       <View style={styles.filterListContainer}>
         <FlatList

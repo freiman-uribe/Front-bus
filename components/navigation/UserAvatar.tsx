@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, Pressable } from 'react-native'
 import { router } from 'expo-router';
 import { Avatar, Button, Menu } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -38,23 +38,26 @@ export const UserAvatar = () => {
   };
 
   return (
-    // <View>
-      <Menu
-          visible={visible}
-          onDismiss={closeMenu}
-          anchor={
-            <Button style={styles.avatarButton} onPress={openMenu}>
-              <Avatar.Text size={40} label="FU" />
-            </Button>
-          }>
-          <Menu.Item onPress={logout} title="Cerrar Sesión" />
-        </Menu>
-    // </View>
+    <Menu
+        contentStyle={{ marginBottom: 0 }}
+        visible={visible}
+        anchorPosition='bottom'
+        statusBarHeight={30}
+        onDismiss={closeMenu}
+        anchor={
+          <Pressable style={styles.avatarButton} onPress={openMenu}>
+            <Avatar.Text size={40} label="FU" />
+          </Pressable>
+        }>
+        <Menu.Item onPress={logout} title="Cerrar Sesión" />
+      </Menu>
   );
 }
 
 const styles = StyleSheet.create({
   avatarButton: {
-    width: '100%'
+    marginRight: 10,
+    width: '100%',
+    marginBottom: 0
   }
 })

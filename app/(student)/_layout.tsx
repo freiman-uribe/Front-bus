@@ -1,10 +1,12 @@
-import { Tabs } from 'expo-router';
+import { router, Tabs } from 'expo-router';
 import React from 'react';
 
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { UserAvatar } from '@/components/navigation/UserAvatar';
+import { TouchableOpacity } from 'react-native';
+import { Button, Icon, Text } from 'react-native-paper';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -12,9 +14,7 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        headerTitle: "Estudiante",
         headerShown: true,
-        headerStyle: { height: 100, paddingBottom: 0 },
         // headerRight: () => <UserAvatar />,
       }}
     >
@@ -22,6 +22,14 @@ export default function TabLayout() {
         name="index"
         options={{
           headerRight:() => <UserAvatar />,
+          title: "Inicio",
+          headerTitleAlign: "center",
+          headerStyle: {
+            elevation:4,
+            shadowColor: "black",
+            shadowRadius: 1,
+            shadowOpacity: 1
+          },
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "home" : "home-outline"}
@@ -31,10 +39,18 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="car"
+        name="register_qr/index"
         options={{
-          title: "Home",
-          tabBarIcon: () => null,
+          title: "Escanear QR",
+          headerTitleAlign: "center",
+          tabBarShowLabel: false,
+          headerShadowVisible: false,
+          tabBarButton: () => null,
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => router.back()}>
+              <Button icon={ { source: 'arrow-left', direction: 'ltr'} } children={null} />
+            </TouchableOpacity>
+          ),
         }}
       />
     </Tabs>

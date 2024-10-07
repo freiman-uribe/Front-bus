@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, Alert, Platform } from 'react-native';
+import { View, Alert, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { Button, HelperText, TextInput } from 'react-native-paper';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
-import ButtonBack from '@/components/ButtonBack';
 import { Axios } from '@/resources/axios/axios';
 import { router, useLocalSearchParams } from 'expo-router';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { styles } from './styles/style';
 import { NumberInput } from '@/components/NumberInput';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAvoidingView } from 'react-native'; 
 
 const schema = Yup.object().shape({
+  name: Yup.string().required('El nombre es obligatorio'),
   scheduleStart: Yup.string()
     .required('La hora de inicio es obligatoria')
     .matches(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Formato de hora inválido (HH:mm)'),
@@ -36,7 +38,7 @@ const schema = Yup.object().shape({
 export default function UpdateCarRouteScreen() {
   const [showPicker, setShowPicker] = useState(false);
   const [currentInput, setCurrentInput] = useState<'scheduleStart' | 'scheduleEnd'>('scheduleStart');
-  const { id } = useLocalSearchParams(); // Obtén el ID de la ruta desde los parámetros
+  const { id } = useLocalSearchParams(); 
 
   const {
     control,
@@ -63,6 +65,7 @@ export default function UpdateCarRouteScreen() {
     const fetchRouteData = async () => {
       try {
         const { data } = await Axios.get(`/car-route/${id}`);
+        setValue('name', data.name);
         setValue('scheduleStart', data.scheduleStart);
         setValue('scheduleEnd', data.scheduleEnd);
         setValue('lactitude', data.lactitude);
@@ -98,69 +101,97 @@ export default function UpdateCarRouteScreen() {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <TextInput
-        label="Hora de inicio"
-        mode='outlined'
-        value={watchScheduleStart}
-        right={<TextInput.Icon icon='clock' />}
-        style={{ marginBottom: 10 }}
-        onFocus={() => {
-          setCurrentInput('scheduleStart');
-          setShowPicker(true);
-        }}
-        error={!!errors.scheduleStart}
-      />
-      {errors.scheduleStart && <HelperText type="error">{errors.scheduleStart.message}</HelperText>}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAvoidingView 
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
+        style={{ flex: 1 }}
+      >
+        <KeyboardAwareScrollView 
+          contentContainerStyle={styles.container} 
+          extraScrollHeight={100} // Ajusta este valor si es necesario
+          keyboardShouldPersistTaps="handled"
+        >
+          
+          <Controller
+            control={control}
+            name="name"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                label="Nombre de la Ruta"
+                mode="outlined"
+                value={value}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                style={{ marginBottom: 10 }}
+                error={!!errors.name}
+              />
+            )}
+          />
+          {errors.name && <HelperText type="error">{errors.name.message}</HelperText>}
+          <TextInput
+            label="Hora de inicio"
+            mode='outlined'
+            value={watchScheduleStart}
+            right={<TextInput.Icon icon='clock' />}
+            style={{ marginBottom: 10 }}
+            onFocus={() => {
+              setCurrentInput('scheduleStart');
+              setShowPicker(true);
+            }}
+            error={!!errors.scheduleStart}
+          />
+          {errors.scheduleStart && <HelperText type="error">{errors.scheduleStart.message}</HelperText>}
 
-      <TextInput
-        label="Hora de fin"
-        mode='outlined'
-        value={watchScheduleEnd}
-        right={<TextInput.Icon icon='clock' />}
-        style={{ marginBottom: 10 }}
-        onFocus={() => {
-          setCurrentInput('scheduleEnd');
-          setShowPicker(true);
-        }}
-        error={!!errors.scheduleEnd}
-      />
-      {errors.scheduleEnd && <HelperText type="error">{errors.scheduleEnd.message}</HelperText>}
+          <TextInput
+            label="Hora de fin"
+            mode='outlined'
+            value={watchScheduleEnd}
+            right={<TextInput.Icon icon='clock' />}
+            style={{ marginBottom: 10 }}
+            onFocus={() => {
+              setCurrentInput('scheduleEnd');
+              setShowPicker(true);
+            }}
+            error={!!errors.scheduleEnd}
+          />
+          {errors.scheduleEnd && <HelperText type="error">{errors.scheduleEnd.message}</HelperText>}
 
-      {showPicker && (
-        <DateTimePicker
-          mode='time'
-          value={new Date()}
-          onChange={handleTimeChange}
-          display={Platform.OS === 'ios' ? 'inline' : 'default'}
-        />
-      )}
+          {showPicker && (
+            <DateTimePicker
+              mode='time'
+              value={new Date()}
+              onChange={handleTimeChange}
+              display={Platform.OS === 'ios' ? 'inline' : 'default'}
+            />
+          )}
 
-      <NumberInput
-        control={control}
-        name="lactitude"
-        label="Latitud"
-        errors={errors}
-        icon={'map-marker'}
-      />
-      <NumberInput
-        control={control}
-        name="longitude"
-        label="Longitud"
-        errors={errors}
-        icon={'map-marker'}
-      />
-      <NumberInput
-        control={control}
-        name="order"
-        label="Orden"
-        errors={errors}
-        icon={'map-marker'}
-      />
+          <NumberInput
+            control={control}
+            name="lactitude"
+            label="Latitud"
+            errors={errors}
+            icon={'map-marker'}
+          />
+          <NumberInput
+            control={control}
+            name="longitude"
+            label="Longitud"
+            errors={errors}
+            icon={'map-marker'}
+          />
+          <NumberInput
+            control={control}
+            name="order"
+            label="Orden"
+            errors={errors}
+            icon={'map-marker'}
+          />
 
-      <Button mode="contained" onPress={handleSubmit(onSubmit)} style={styles.button}>
-        Actualizar Ruta
-      </Button>
-    </ScrollView>
+          <Button mode="contained" onPress={handleSubmit(onSubmit)} style={styles.button}>
+            Actualizar Ruta
+          </Button>
+        </KeyboardAwareScrollView>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 }

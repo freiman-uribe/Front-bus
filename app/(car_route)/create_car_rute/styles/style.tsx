@@ -6,7 +6,7 @@ export const styles = StyleSheet.create({
         backgroundColor: theme.colors.white,
         flex: 1,
         justifyContent: 'center',
-        paddingHorizontal: 10,
+        paddingHorizontal: 20,
         paddingTop: 20
     },
     topContainer: {

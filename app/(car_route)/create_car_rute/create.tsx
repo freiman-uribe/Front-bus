@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
-import { View, ScrollView, Alert, Platform } from 'react-native';
+import { Alert, Platform, TouchableWithoutFeedback, Keyboard, View } from 'react-native';
 import { Button, HelperText, TextInput } from 'react-native-paper';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
-import ButtonBack from '@/components/ButtonBack';
 import { Axios } from '@/resources/axios/axios';
 import { router } from 'expo-router';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { styles } from './styles/style';
 import { NumberInput } from '@/components/NumberInput';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAvoidingView } from 'react-native'; 
 
 const schema = Yup.object().shape({
+  name: Yup.string().required('El nombre es obligatorio'),
   scheduleStart: Yup.string()
     .required('La fecha de inicio es obligatoria')
     .matches(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Formato de hora inválido (HH:mm)'),
@@ -47,6 +49,7 @@ export default function CreateCarRouteScreen() {
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
+      name: '',
       scheduleStart: '',
       scheduleEnd: '',
       lactitude: 0,
@@ -63,8 +66,6 @@ export default function CreateCarRouteScreen() {
     setShowPicker(false);
   };
 
-
-
   const onSubmit = async (data: any) => {
     try {
       await Axios.post('/car-route', data);
@@ -78,67 +79,94 @@ export default function CreateCarRouteScreen() {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <TextInput
-        label="Hora de inicio"
-        mode='outlined'
-        value={getValues('scheduleStart')}
-        right={<TextInput.Icon icon='clock' />}
-        style={{ marginBottom: 10 }}
-        onFocus={() => {
-          setCurrentInput('scheduleStart');
-          setShowPicker(true);
-        }}
-        error={!!errors.scheduleStart}
-      />
-      {errors.scheduleStart && <HelperText type="error">{errors.scheduleStart.message}</HelperText>}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAvoidingView 
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'} // Cambia esto según tu necesidad
+        style={{ flex: 1 }}
+      >
+        <KeyboardAwareScrollView 
+          contentContainerStyle={styles.container} 
+          extraScrollHeight={100} // Ajusta este valor si es necesario
+          keyboardShouldPersistTaps="handled" // Esto asegura que los taps en los campos de texto persistan
+        >
+          <Controller
+            control={control}
+            name="name"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                label="Nombre de la Ruta"
+                mode="outlined"
+                value={value}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                style={{ marginBottom: 10 }}
+                error={!!errors.name}
+              />
+            )}
+          />
+          {errors.name && <HelperText type="error">{errors.name.message}</HelperText>}
 
-      <TextInput
-        label="Hora de fin"
-        mode='outlined'
-        value={getValues('scheduleEnd')}
-        right={<TextInput.Icon icon='clock' />}
-        style={{ marginBottom: 10 }}
-        onFocus={() => {
-          setCurrentInput('scheduleEnd');
-          setShowPicker(true);
-        }}
-        error={!!errors.scheduleEnd}
-      />
-      {errors.scheduleEnd && <HelperText type="error">{errors.scheduleEnd.message}</HelperText>}
+          <TextInput
+            label="Hora de inicio"
+            mode='outlined'
+            value={getValues('scheduleStart')}
+            right={<TextInput.Icon icon='clock' />}
+            style={{ marginBottom: 10 }}
+            onFocus={() => {
+              setCurrentInput('scheduleStart');
+              setShowPicker(true);
+            }}
+            error={!!errors.scheduleStart}
+          />
+          {errors.scheduleStart && <HelperText type="error">{errors.scheduleStart.message}</HelperText>}
 
-      {showPicker && (
-        <DateTimePicker
-          mode='time'
-          value={new Date()}
-          onChange={handleTimeChange}
-          display={Platform.OS === 'ios' ? 'inline' : 'default'}
-        />
-      )}
+          <TextInput
+            label="Hora de fin"
+            mode='outlined'
+            value={getValues('scheduleEnd')}
+            right={<TextInput.Icon icon='clock' />}
+            style={{ marginBottom: 10 }}
+            onFocus={() => {
+              setCurrentInput('scheduleEnd');
+              setShowPicker(true);
+            }}
+            error={!!errors.scheduleEnd}
+          />
+          {errors.scheduleEnd && <HelperText type="error">{errors.scheduleEnd.message}</HelperText>}
 
-      <NumberInput
-        control={control}
-        name="lactitude"
-        label="Latitud" errors={errors}
-        icon={'map-marker'}
-        
-      />
-      <NumberInput
-        control={control}
-        name="longitude"
-        label="Longitud" errors={errors}
-        icon={'map-marker'}
-      />
-      <NumberInput
-        control={control}
-        name="order"
-        label="Orden" errors={errors}
-        icon={'map-marker'}
-      />
+          {showPicker && (
+            <DateTimePicker
+              mode='time'
+              value={new Date()}
+              onChange={handleTimeChange}
+              display={Platform.OS === 'ios' ? 'inline' : 'default'}
+            />
+          )}
 
-      <Button mode="contained" onPress={handleSubmit(onSubmit)} style={styles.button}>
-        Guardar Ruta
-      </Button>
-    </ScrollView>
+          <NumberInput
+            control={control}
+            name="lactitude"
+            label="Latitud" errors={errors}
+            icon={'map-marker'}
+          />
+          <NumberInput
+            control={control}
+            name="longitude"
+            label="Longitud" errors={errors}
+            icon={'map-marker'}
+          />
+          <NumberInput
+            control={control}
+            name="order"
+            label="Orden" errors={errors}
+            icon={'map-marker'}
+          />
+
+          <Button mode="contained" onPress={handleSubmit(onSubmit)} style={styles.button}>
+            Guardar Ruta
+          </Button>
+        </KeyboardAwareScrollView>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 }

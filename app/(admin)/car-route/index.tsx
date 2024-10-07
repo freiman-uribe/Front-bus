@@ -10,6 +10,7 @@ import ConfirmDialog from '@/components/confirms/ConfirmDialog';
 interface CarRoute {
   id: string;
   order: number;
+  name: string;
   scheduleStart: string;
   scheduleEnd: string;
   lactitude: number; 
@@ -23,7 +24,7 @@ export default function CarRouteScreen() {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [routeToDelete, setRouteToDelete] = useState<string | null>(null);
   const [visibleMenu, setVisibleMenu] = useState<{ [key: string]: boolean }>({});
-  const [selectedFilter, setSelectedFilter] = useState('order'); 
+  const [selectedFilter, setSelectedFilter] = useState('name'); 
 
   const openMenu = (id: string) => {
     setVisibleMenu(prev => ({ ...prev, [id]: true }));
@@ -89,6 +90,7 @@ export default function CarRouteScreen() {
 
   
   const searchOptions = [
+    { label: 'Nombre', value: 'name' },
     { label: 'Orden', value: 'order' },
     { label: 'Horario Inicio', value: 'scheduleStart' },
     { label: 'Horario Fin', value: 'scheduleEnd' },
@@ -132,8 +134,8 @@ export default function CarRouteScreen() {
         {filteredRoutes.map((route) => (
           <Card key={route.id} style={styles.card}>
             <Card.Title
-              title={`Orden: ${route.order}`}
-              subtitle={`Horario: ${route.scheduleStart} - ${route.scheduleEnd}`}
+               title={`Nombre: ${route.name}`} // Muestra el nombre de la ruta
+               subtitle={`Orden: ${route.order} | Horario: ${route.scheduleStart} - ${route.scheduleEnd}`}
               right={(props) => (
                 <Menu
                   visible={visibleMenu[route.id]}

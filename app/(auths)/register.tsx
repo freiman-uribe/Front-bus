@@ -16,12 +16,14 @@ export default function Register() {
         password: '',
         code_student: '',
         code_program: '',
-        rh: ''
+        rh: '',
+        eps: ''
     })
     const [hidePass, setHidePass] = useState(true);
 
     const [programList, setProgramList] = useState<any>([]);
     const [rhList, setRhList] = useState<any>([]);
+    const [epsList, setEpsList] = useState<any>([]);
     
     const handleRegister = async () => {
         try {
@@ -36,11 +38,13 @@ export default function Register() {
 
     const listRH = async () => {
         try {
-            const { data } = await Axios.get('/common/list-types?codes=type_rh')
-            const formatRh = formattedSelect(data[0].listItem)
+            const { data } = await Axios.get('/common/list-types?codes=type_rh,type_eps')
+            const formatRh = formattedSelect(data.find((item: any) => item.code === 'type_rh').listItem)
+            const formatEps = formattedSelect(data.find((item: any) => item.code === 'type_eps').listItem)
             setRhList(formatRh)
+            setEpsList(formatEps)
         } catch (error) {
-            console.error('🚀 ~ listRH ~ error:', error)
+            console.log('🚀 ~ listRH ~ error:', error)
         }
     }
 
@@ -62,7 +66,8 @@ export default function Register() {
         password: '',
         code_student: '',
         code_program: '',
-        rh: ''
+        rh: '',
+        eps: ''
     })
 
     useEffect(() => {
@@ -121,9 +126,20 @@ export default function Register() {
                         <Dropdown
                             label='RH'
                             mode='outlined'
-                            onSelect={(text) => setForm({...form, rh: text})}
+                            onSelect={(text) => setForm({...form, rh: text as any})}
                             options={rhList}
                             value={form.rh}
+                            hideMenuHeader={true}
+                        />
+                    </View>
+
+                    <View style={styles.input}>
+                        <Dropdown
+                            label='Eps'
+                            mode='outlined'
+                            onSelect={(text) => setForm({...form, eps: text as any})}
+                            options={epsList}
+                            value={form.eps}
                             hideMenuHeader={true}
                         />
                     </View>
@@ -152,7 +168,7 @@ export default function Register() {
                         <Dropdown
                             label='Código de programa'
                             mode='outlined'
-                            onSelect={(text) => setForm({...form, code_program: text})}
+                            onSelect={(text) => setForm({...form, code_program: text as any})}
                             options={programList}
                             value={form.code_program}
                             hideMenuHeader={true}

@@ -54,6 +54,7 @@ export default function RootLayout() {
             <Stack.Screen name="(driver)" options={{ headerShown: false }} />
             <Stack.Screen name="(student)" options={{ headerShown: false }} />
             <Stack.Screen name="(plans)" options={{ headerShown: false }} />
+            <Stack.Screen name='(car)' options={{ headerShown: false }} />
             <Stack.Screen name="+not-found" />
           </Stack>
         </SafeAreaProvider>

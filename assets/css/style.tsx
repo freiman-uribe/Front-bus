@@ -13,6 +13,8 @@ export const theme = {
         dark: '#555',
         light: '#ffff',
         black: '#0000',
-        white: '#ffffff'
+        white: '#ffffff',
+        gray: '#888',
+        darkGray: '#666',
     }
 }

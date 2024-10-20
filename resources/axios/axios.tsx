@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { router } from 'expo-router';
 
 export const Axios = axios.create({
 baseURL: 'http://192.168.0.7:3000', // + process.env.EXPO_PUBLIC_HOST,
@@ -19,9 +20,13 @@ Axios.interceptors.request.use(async(config) => {
 
 Axios.interceptors.response.use(
   (response) => {
+    console.log(response, 'response interceptor')
     return response.data;
   },
   (error) => {
+    if (error.status === 401) {
+      router.replace('/(auths)/');
+    }
     return Promise.reject(error);
   }
 );

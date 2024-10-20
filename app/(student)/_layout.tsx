@@ -54,6 +54,24 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="payment/index"
+        options={{
+          title: "Pagar con woompi",
+          headerTitleAlign: "center",
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => router.back()}>
+              <Button icon={ { source: 'arrow-left', direction: 'ltr'} } children={null} />
+            </TouchableOpacity>
+          ),
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "card" : "card-outline"}
+              color={color}
+            />
+          ),
+        }}
+      />
     </Tabs>
   );
 }

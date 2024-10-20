@@ -1,65 +1,63 @@
 
 import { Axios } from '@/resources/axios/axios';
-import { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
-import { Button, Card, Text, Modal, Portal, PaperProvider, Icon, IconButton } from 'react-native-paper';
-import { es } from 'date-fns/locale';
-import { format, parseISO } from 'date-fns';
-import QRCode from 'react-native-qrcode-svg';
-import { BUS_DRIVER_STATUS } from '@/constants/Driver';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet } from 'react-native';
+import { Button, Text, Modal, Portal } from 'react-native-paper';
 import { Camera, useCameraDevice, useCameraPermission, useCodeScanner } from 'react-native-vision-camera';
-import { PERMISSIONS, request, RESULTS } from 'react-native-permissions';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function RegisterQr( { navigation }:any ) {
   const [isModalQr, setIsModalQr] = useState(false)
   const [errorModal, setErrorModal] = useState(false)
   const [messageError, setMessageError] = useState('')
   const device = useCameraDevice('back')
-  const { hasPermission, requestPermission  } = useCameraPermission()
+  const { hasPermission, requestPermission } = useCameraPermission()
   const [scannedCode, setCodeScanned] = useState<any>(null)
 
   const handleGenerateQr = async (dataQr:any) => {
     try {
       const { data } = await Axios.post<any>("/student-handler/save-list-for-qr", dataQr);
-      console.log(data)
       setIsModalQr(true)
     } catch (error:any) {
       setErrorModal(true)
-      setCodeScanned(null)
+      setCodeScanned(error.status === 400 ? 'Registrado' : null)
       setMessageError(error.status === 400 ? 'El QR ya fué registrado' : 'Hubo un error al registrar el qr')
       console.log("🚀 ~ listRH ~ error:", JSON.stringify(error));
     }
   }
 
   useEffect(() => {
-    if (!hasPermission) {
-      requestPermission()
-    }
-  }, [hasPermission])
-  if (!hasPermission) return <Text>No tiene permisos</Text>
-  if (device == null) return  <Text>No tiene camara xd</Text>
-
-  useEffect(() => {
-    setCodeScanned(null)
-  }, [router])
-
+    const requestCameraPermission = async () => {
+      if (!hasPermission) {
+        await requestPermission();
+      }
+    };
+    requestCameraPermission();
+  }, [])
   const codeScanner = useCodeScanner({
     codeTypes: ['qr'],
     onCodeScanned: codes => {
       if (codes.length > 0) {
-        if (codes[0].value) {
-          if (!scannedCode) {
-            handleGenerateQr(JSON.parse(codes[0].value))
-            setCodeScanned(codes[0]?.value)
-          }
+        if (codes.length > 0 && codes[0].value && !scannedCode) {
+          handleGenerateQr(JSON.parse(codes[0].value));
+          setCodeScanned(codes[0].value);
         }
       }
       return;
     },
   });
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setCodeScanned(null); 
+      return () => {};
+    }, [])
+  );
+
+
+  if (!hasPermission) return <Text>No tiene permisos</Text>
+  if (!device) return  <Text>No tiene camara</Text>
 
   return (
     <>
@@ -83,6 +81,7 @@ export default function RegisterQr( { navigation }:any ) {
         <Modal  visible={errorModal} onDismiss={() => setErrorModal(false)} contentContainerStyle={styles.modal}>
           <Text>{messageError}</Text>
           <Button onPress={() => {
+            router.back()
             setErrorModal(false)
           }}>Cerrar</Button>
         </Modal>

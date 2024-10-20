@@ -14,11 +14,17 @@ import { theme } from '@/assets/css/style'
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { UserAvatar } from '@/components/navigation/UserAvatar';
+import { useSession } from '@/hooks/useSession';
+import { ROLES } from '@/constants/Rol';
+import { Link, router } from 'expo-router';
+import { RedirectRouter } from '@/components/RedirectRouter';
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const insets = useSafeAreaInsets();
+
+
 
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
@@ -33,30 +39,34 @@ export default function RootLayout() {
   if (!loaded) {
     return null;
   }
+  
   return (
     <PaperProvider theme={theme}>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <SafeAreaProvider
+        
           style={{ paddingBottom: insets.bottom }}
           // style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
         >
-          <Stack>
-            <Stack.Screen
-              name="(admin)"
-              options={{
-                headerTitle: '',
-                headerRight: () => <UserAvatar />,
-              }}
-            />
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="(auths)" options={{ headerShown: false }} />
-            <Stack.Screen name="(car_route)" options={{ headerShown: false }} />
-            <Stack.Screen name="(driver)" options={{ headerShown: false }} />
-            <Stack.Screen name="(student)" options={{ headerShown: false }} />
-            <Stack.Screen name="(plans)" options={{ headerShown: false }} />
-            <Stack.Screen name='(car)' options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
+            <RedirectRouter>
+              <Stack >
+                  <Stack.Screen
+                    name="(admin)"
+                    options={{
+                      headerTitle: '',
+                      headerRight: () => <UserAvatar />,
+                    }}
+                  />
+                  <Stack.Screen  name="(tabs)" options={{ headerShown: false }} />
+                  <Stack.Screen name="(auths)" options={{ headerShown: false }} />
+                  <Stack.Screen name="(car_route)" options={{ headerShown: false }} />
+                  <Stack.Screen name="(driver)" options={{ headerShown: false }} />
+                  <Stack.Screen name="(student)" options={{ headerShown: false }} />
+                  <Stack.Screen name="(plans)" options={{ headerShown: false }} />
+                  <Stack.Screen name='(car)' options={{ headerShown: false }} />
+                  <Stack.Screen name="+not-found" />
+              </Stack>
+            </RedirectRouter>
         </SafeAreaProvider>
       </ThemeProvider>
     </PaperProvider>

@@ -13,6 +13,7 @@ import { PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 import { UserAvatar } from '@/components/navigation/UserAvatar';
 import { useSession } from '@/hooks/useSession';
 import { theme } from '@/assets/css/style';
+import { useRouter } from 'expo-router';
 
 const MORE_ICON = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
 
@@ -20,6 +21,7 @@ export default function Car() {
   const [listAssing, setListAssing] = useState([]);
   const [isModalQr, setIsModalQr] = useState(false)
   const [dataQr, setDataQr] = useState(null)
+  const router = useRouter();
   const getAssignCarRoutes = async () => {
     try {
       const { data } = await Axios.get<any>("/bus-driver-manager/get-assigned-driver");
@@ -33,45 +35,7 @@ export default function Car() {
     getAssignCarRoutes()
   }, [])
 
-  const handleGenerateQr = async (id:string) => {
-    try {
-      const { data } = await Axios.post<any>("/bus-driver-manager/generate-qr", {
-        bus_driver_id: id,
-        status: BUS_DRIVER_STATUS.PICKING
-      });
-      setDataQr(data)
-      setIsModalQr(true)
-    } catch (error) {
-      console.error("🚀 ~ listRH ~ error:", error);
-    }
-  }
-
-  const device = useCameraDevice('back')
-  const { hasPermission, requestPermission  } = useCameraPermission()
-
   const {session} = useSession()
-
-  useEffect(() => {
-    if (!hasPermission) {
-      requestPermission()
-    }
-  }, [hasPermission])
-  if (!hasPermission) return <Text>No tiene permisos</Text>
-  if (device == null) return  <Text>No tiene camara xd</Text>
-
-  const [scannedCode,setCodeScanned] = useState<any>(null)
-  const codeScanner = useCodeScanner({
-    codeTypes: ['qr'],
-    onCodeScanned: codes => {
-      if (codes.length > 0) {
-        if (codes[0].value) {
-          console.log(codes[0].value, 'escaneado')
-          setTimeout(() => setCodeScanned(codes[0]?.value), 500);
-        }
-      }
-      return;
-    },
-  });
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false} >
@@ -87,7 +51,9 @@ export default function Car() {
                     <Text>{`Hora de recogida: ${ format(parseISO(driverBus.route.schedule_start), 'hh:mm a', { locale: es }) }`}</Text>
                   </View>
                 }
-                right={() => <Button style={{marginRight: 10}} compact mode='text'  onPress={() => handleGenerateQr(driverBus.id)}>Recoger</Button>}
+                right={() => <Button style={{marginRight: 10}} compact mode='text'  onPress={() => {
+                  router.push(`/(driver)/generate-qr/${driverBus.id}` as any)
+                }}>Recoger</Button>}
               >
                 </Card.Title>
               <Card.Content>

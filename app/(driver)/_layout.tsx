@@ -1,17 +1,18 @@
-import { Tabs } from 'expo-router';
+import { Tabs, useRouter } from 'expo-router';
 import React from 'react';
 
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { UserAvatar } from '@/components/navigation/UserAvatar';
-import { Platform } from 'react-native';
-import { Appbar } from 'react-native-paper';
+import { Platform, TouchableOpacity } from 'react-native';
+import { Appbar, IconButton } from 'react-native-paper';
 
 
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const router = useRouter();
   return (
     <Tabs
       screenOptions={{
@@ -40,10 +41,17 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="car"
+        name="generate-qr/[id]"
         options={{
-          title: "Home",
+          title: "Registro QR",
           tabBarIcon: () => null,
+          tabBarShowLabel: false,
+          tabBarButton: () => null,
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => router.back()} style={{ marginLeft: 10 }}>
+              <IconButton icon="arrow-left" size={24} />
+            </TouchableOpacity>
+          ),
         }}
       />
     </Tabs>

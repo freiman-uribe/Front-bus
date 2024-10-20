@@ -43,6 +43,7 @@ export default function TabLayout() {
         options={{
           title: "Escanear QR",
           headerTitleAlign: "center",
+          
           tabBarShowLabel: false,
           headerShadowVisible: false,
           tabBarButton: () => null,

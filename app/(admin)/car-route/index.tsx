@@ -134,7 +134,7 @@ export default function CarRouteScreen() {
         {filteredRoutes.map((route) => (
           <Card key={route.id} style={styles.card}>
             <Card.Title
-               title={`Nombre: ${route.name}`} // Muestra el nombre de la ruta
+               title={`Nombre: ${route.name}`} 
                subtitle={`Orden: ${route.order} | Horario: ${route.scheduleStart} - ${route.scheduleEnd}`}
               right={(props) => (
                 <Menu

@@ -35,8 +35,8 @@ export default function BusDriverForm({ initialValues }: BusDriverFormProps) {
     const [drivers, setDrivers] = useState<any>([]);
     const { selectedFiles, pickFile } = useFilePicker();
     const [fileUrls, setFileUrls] = useState<{ [key: string]: string }>({});
-    const [loading, setLoading] = useState(true); // Estado de carga para los datos
-    const [submitting, setSubmitting] = useState(false); // Estado de carga para el envío del formulario
+    const [loading, setLoading] = useState(true); 
+    const [submitting, setSubmitting] = useState(false); 
 
     const requiredFiles =[ { label: 'Licencia', fileKey: 'license' } ];  
 
@@ -70,9 +70,9 @@ export default function BusDriverForm({ initialValues }: BusDriverFormProps) {
     useFocusEffect(
         useCallback(() => {
             const fetchData = async () => {
-                setLoading(true); // Activar estado de carga al iniciar la carga de datos
+                setLoading(true); 
                 await Promise.all([fetchCars(), fetchDrivers(), fetchRoutes()]);
-                setLoading(false); // Desactivar estado de carga cuando se hayan cargado los datos
+                setLoading(false);
             };
 
             fetchData();
@@ -83,7 +83,7 @@ export default function BusDriverForm({ initialValues }: BusDriverFormProps) {
         resolver: yupResolver(validationSchema),
     });
 
-    // Resetear el formulario con valores iniciales si se proporcionan
+   
     useEffect(() => {
         if (initialValues) {
             reset(initialValues);
@@ -97,7 +97,7 @@ export default function BusDriverForm({ initialValues }: BusDriverFormProps) {
             return;
         }
 
-        setSubmitting(true); // Activar estado de carga al enviar el formulario
+        setSubmitting(true); 
 
         const formData = new FormData();
         formData.append("driver_id", data.driver_id);
@@ -127,11 +127,11 @@ export default function BusDriverForm({ initialValues }: BusDriverFormProps) {
             console.log(error);
             Alert.alert("Error", "Ocurrió un problema al guardar los datos");
         } finally {
-            setSubmitting(false); // Desactivar estado de carga cuando termine el envío
+            setSubmitting(false); 
         }
     };
 
-    // Mostrar el ActivityIndicator mientras se cargan los datos
+   
     if (loading) {
         return (
             <View style={styles.loadingContainer}>

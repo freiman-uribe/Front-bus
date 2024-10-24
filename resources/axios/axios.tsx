@@ -3,7 +3,7 @@ import axios from 'axios';
 import { router } from 'expo-router';
 
 export const Axios = axios.create({
-baseURL: 'http://192.168.0.7:3000', // + process.env.EXPO_PUBLIC_HOST,
+baseURL:process.env.EXPO_PUBLIC_HOST, // + 'http://192.168.0.7:3000' ,
 headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'

@@ -1,4 +1,4 @@
-
+import React from 'react';
 import { useFonts } from 'expo-font';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -18,6 +18,7 @@ import { useSession } from '@/hooks/useSession';
 import { ROLES } from '@/constants/Rol';
 import { Link, router } from 'expo-router';
 import { RedirectRouter } from '@/components/RedirectRouter';
+import { DrawerToggleButton } from '@react-navigation/drawer';
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -54,6 +55,7 @@ export default function RootLayout() {
                     name="(admin)"
                     options={{
                       headerTitle: '',
+                      headerLeft: () => <DrawerToggleButton />,
                       headerRight: () => <UserAvatar />,
                     }}
                   />
@@ -64,6 +66,7 @@ export default function RootLayout() {
                   <Stack.Screen name="(student)" options={{ headerShown: false }} />
                   <Stack.Screen name="(plans)" options={{ headerShown: false }} />
                   <Stack.Screen name='(car)' options={{ headerShown: false }} />
+                  <Stack.Screen name='(bus-driver)' options={{ headerShown: false }} />
                   <Stack.Screen name="+not-found" />
               </Stack>
             </RedirectRouter>

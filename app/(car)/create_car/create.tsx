@@ -34,7 +34,12 @@ export default function FormCar() {
   const [loading, setLoading] = useState(false); 
   const [modalVisible, setModalVisible] = useState(false);
   const [message, setMessage] = useState("");
-  const requiredFiles = ['seguro', 'tarjeta_de_propietario', 'seguro_todo_riesgo', 'tecnomecanica'];
+  const requiredFiles = [
+    { label: 'Seguro', fileKey: 'seguro' },
+    { label: 'Tarjeta de Propietario', fileKey: 'tarjeta_de_propietario' },
+    { label: 'Seguro Todo Riesgo', fileKey: 'seguro_todo_riesgo' },
+    { label: 'Tecnomecánica', fileKey: 'tecnomecanica' },
+  ]
   const { control, handleSubmit, formState: { errors }, setValue } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -48,11 +53,11 @@ export default function FormCar() {
 
   const onSubmit = async (data: any) => {
    
-    const missingFiles = requiredFiles.filter(file => !selectedFiles[file]);
+    const missingFiles = requiredFiles.filter(file => !selectedFiles[file.fileKey]);
 
     if (missingFiles.length > 0) {
-      Alert.alert("Error", `Los siguientes archivos son requeridos: ${missingFiles.join(", ")}`);
-      return;
+        Alert.alert("Error", `Los siguientes archivos son requeridos: ${missingFiles.map(f => f.label).join(", ")}`);
+        return;
     }
 
     const formData = new FormData();
@@ -109,10 +114,11 @@ export default function FormCar() {
         <CustomTextInput control={control} name="color" label="Color" icon="invert-colors" error={errors.color} />
         <CustomTextInput control={control} name="size" label="Capacidad" icon="account-multiple" keyboardType="numeric" error={errors.size} />
 
-        {requiredFiles.map((fileKey) => (
+        {requiredFiles.map(({fileKey ,label}) => (
          <BtnPickFile
             key={fileKey}
             fileKey={fileKey}
+            label={label}
             selectedFiles={selectedFiles}
             pickFile={pickFile}
           />

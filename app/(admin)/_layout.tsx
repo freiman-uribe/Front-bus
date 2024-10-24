@@ -6,66 +6,63 @@ import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { UserAvatar } from '@/components/navigation/UserAvatar';
 
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Drawer } from 'expo-router/drawer';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import DrawerIcon from '@/components/navigation/DrawerIcon';
+
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+    <GestureHandlerRootView style={{ flex: 1 }} >
+      <Drawer screenOptions={{
         headerShown: false,
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Inicio",
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "home" : "home-outline"}
-              color={color}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="car"
-        options={{
-          title: "Buses",
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "bus" : "bus-outline"}
-              color={color}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="plans"
-        options={{
-          title: "Planes",
+        drawerActiveTintColor: "green",
+        }}>
+        <Drawer.Screen
+          name="index" 
+          options={{
+            drawerLabel: 'inicio',
+            title: 'overview',
+            drawerIcon: (props) => <DrawerIcon name="home-outline"  color={props.color}/>,
+            
+          }}
+        />
+        <Drawer.Screen
+          name="car" 
+          options={{
+            drawerLabel: 'Buses',
+            title: 'Buses',
+            drawerIcon: (props) => <DrawerIcon name="bus-outline"  color={props.color}/>,
+          }}
+        />
+        <Drawer.Screen
+          name="plans" 
+          options={{
+            drawerLabel: 'Planes',
+            title: 'Planes',
+            drawerIcon: (props) => <DrawerIcon name="wallet-outline"  color={props.color}/>,
+          }}
+        />
+        <Drawer.Screen
+          name="car-route" 
+          options={{
+            drawerLabel: 'Rutas',
+            title: 'Rutas',
+            drawerIcon: (props) => <DrawerIcon name="map-outline"  color={props.color}/>,
+          }}
+        />
+        <Drawer.Screen
+          name="bus-driver" 
+          options={{
+            drawerLabel: 'Asignación de conductores',
+            title: 'Conductores',
+            drawerIcon: (props) => <DrawerIcon name="speedometer-outline"  color={props.color}/>,
+          }}
+        />       
+      </Drawer>
+    </GestureHandlerRootView>
 
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "wallet" : "wallet-outline"}
-              color={color}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="car-route"
-        options={{
-          title: "Rutas",
-
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "map" : "map-outline"}
-              color={color}
-            />
-          ),
-        }}
-      />
-    </Tabs>
   );
 }
 

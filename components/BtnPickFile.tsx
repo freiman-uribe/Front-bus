@@ -5,16 +5,17 @@ import { Button } from 'react-native-paper';
 
 interface BtnPickFileProps {
   fileKey: string;
+  label: string;
   fileUrls?: { [key: string]: string };
   selectedFiles: any;
   pickFile: (fileKey: string) => void;
 }
 
-export default function BtnPickFile({fileKey, fileUrls, selectedFiles, pickFile}: BtnPickFileProps) {
+export default function BtnPickFile({fileKey, label, fileUrls, selectedFiles, pickFile}: BtnPickFileProps) {
   
   return (
     <View style={styles.input} >
-      <Text style={styles.label}>{fileKey.replace(/_/g, ' ').toUpperCase()}</Text>
+      <Text style={styles.label}>{label.toUpperCase()}</Text>
 
       {fileUrls && (
         fileUrls[fileKey] ? (

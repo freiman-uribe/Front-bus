@@ -33,7 +33,13 @@ export default function FormCar() {
   const [fileUrls, setFileUrls] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = useState(false);
   const [loadingCar, setLoadingCar] = useState(true);
-  const requiredFiles = ['seguro', 'tarjeta_de_propietario', 'seguro_todo_riesgo', 'tecnomecanica'];
+  const requiredFiles = [
+    { label: 'Seguro', fileKey: 'seguro' },
+    { label: 'Tarjeta de Propietario', fileKey: 'tarjeta_de_propietario' },
+    { label: 'Seguro Todo Riesgo', fileKey: 'seguro_todo_riesgo' },
+    { label: 'Tecnomecánica', fileKey: 'tecnomecanica' },
+
+  ];
   const { control, handleSubmit, formState: { errors }, setValue } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -75,41 +81,42 @@ export default function FormCar() {
 
     fetchCarData();
   }, [id, setValue]);
-
+  console.log("Archivos seleccionados:", selectedFiles);
 
   const onSubmit = async (data: any) => {
-
     const formData = new FormData();
     formData.append("type", data.type);
     formData.append("company", data.company);
     formData.append("placa", data.placa);
     formData.append("color", data.color);
     formData.append("size", data.size.toString());
-
+  
+    // Asegúrate de que selectedFiles contenga archivos antes de agregar al FormData
     Object.keys(selectedFiles).forEach((key) => {
       const file = selectedFiles[key];
       if (file && file.uri && file.type && file.name) {
-        formData.append(key, {
+        const fileBlob = {
           uri: file.uri,
           type: file.type,
           name: file.name,
-        } as any);
+        } as any;
+        formData.append(key, fileBlob);
       } else {
         console.error(`Archivo faltante o inválido: ${key}`, file);
       }
     });
-
+  
     setLoading(true);
-
+  
     try {
-      await Axios.put(`/config/car/${id}`, formData, {
+      const response = await Axios.put(`/config/car/${id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       Alert.alert("Éxito", "Datos editados correctamente");
       router.navigate("/(admin)/car");
-    } catch (error) {
+    } catch (error: any) {
       Alert.alert("Error", "Ocurrió un problema al editar los datos");
-      console.log("Error al editar coche:", error);
+      console.log("Error al editar coche:", error.response);
     } finally {
       setLoading(false);
     }
@@ -139,9 +146,10 @@ export default function FormCar() {
             <CustomTextInput control={control} name="color" label="Color" icon="invert-colors" error={errors.color} />
             <CustomTextInput control={control} name="size" label="Capacidad" icon="account-multiple" keyboardType="numeric" error={errors.size} />
 
-            {requiredFiles.map((fileKey) => (
+            {requiredFiles.map(({fileKey, label}) => (
               <BtnPickFile
                 key={fileKey}
+                label={label}
                 fileKey={fileKey}
                 fileUrls={fileUrls}
                 selectedFiles={selectedFiles}

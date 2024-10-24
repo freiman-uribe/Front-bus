@@ -65,7 +65,7 @@ export default function FormCar() {
         setValue('color', carData.color);
         setValue('size', carData.size.toString());
 
-        // Establecer las URL de los archivos si están presentes
+        
         setFileUrls({
           tarjeta_de_propietario: carData.tarjeta_de_propietario,
           seguro: carData.seguro,
@@ -91,7 +91,7 @@ export default function FormCar() {
     formData.append("color", data.color);
     formData.append("size", data.size.toString());
   
-    // Asegúrate de que selectedFiles contenga archivos antes de agregar al FormData
+    
     Object.keys(selectedFiles).forEach((key) => {
       const file = selectedFiles[key];
       if (file && file.uri && file.type && file.name) {

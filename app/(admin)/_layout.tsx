@@ -1,18 +1,12 @@
-import { Tabs } from 'expo-router';
 import React from 'react';
 
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { UserAvatar } from '@/components/navigation/UserAvatar';
 
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Drawer } from 'expo-router/drawer';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import DrawerIcon from '@/components/navigation/DrawerIcon';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
   return (
     <GestureHandlerRootView style={{ flex: 1 }} >
       <Drawer screenOptions={{

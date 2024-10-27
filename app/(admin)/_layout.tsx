@@ -1,61 +1,29 @@
 import React from 'react';
-
+import { Stack } from 'expo-router';
 import { useColorScheme } from '@/hooks/useColorScheme';
-
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { Drawer } from 'expo-router/drawer';
-import DrawerIcon from '@/components/navigation/DrawerIcon';
+import { DrawerToggleButton } from '@react-navigation/drawer';
+import { UserAvatar } from '@/components/navigation/UserAvatar';
 
 export default function TabLayout() {
+  const colorScheme = useColorScheme();
   return (
-    <GestureHandlerRootView style={{ flex: 1 }} >
-      <Drawer screenOptions={{
-        headerShown: false,
-        drawerActiveTintColor: "green",
-        }}>
-        <Drawer.Screen
-          name="index" 
-          options={{
-            drawerLabel: 'inicio',
-            title: 'overview',
-            drawerIcon: (props) => <DrawerIcon name="home-outline"  color={props.color}/>,
-            
-          }}
-        />
-        <Drawer.Screen
-          name="car" 
-          options={{
-            drawerLabel: 'Buses',
-            title: 'Buses',
-            drawerIcon: (props) => <DrawerIcon name="bus-outline"  color={props.color}/>,
-          }}
-        />
-        <Drawer.Screen
-          name="plans" 
-          options={{
-            drawerLabel: 'Planes',
-            title: 'Planes',
-            drawerIcon: (props) => <DrawerIcon name="wallet-outline"  color={props.color}/>,
-          }}
-        />
-        <Drawer.Screen
-          name="car-route" 
-          options={{
-            drawerLabel: 'Rutas',
-            title: 'Rutas',
-            drawerIcon: (props) => <DrawerIcon name="map-outline"  color={props.color}/>,
-          }}
-        />
-        <Drawer.Screen
-          name="bus-driver" 
-          options={{
-            drawerLabel: 'Asignación de conductores',
-            title: 'Conductores',
-            drawerIcon: (props) => <DrawerIcon name="speedometer-outline"  color={props.color}/>,
-          }}
-        />       
-      </Drawer>
-    </GestureHandlerRootView>
+    <Stack>
+      <Stack.Screen name="(drawer)" options={{
+        headerTitle: '',
+        headerLeft: () => <DrawerToggleButton
+          tintColor={colorScheme === 'dark' ? '#fff' : '#000'}
+        />,
+        headerRight: () => <UserAvatar />
+      }} />
+      <Stack.Screen name="bus-driver/create" options={{ title: 'Crear Asignación' }} />
+      <Stack.Screen name="bus-driver/update/[id]" options={{ title: 'Editar Asignación' }} />
+      <Stack.Screen name="car/create" options={{ title: 'Crear Bus' }} />
+      <Stack.Screen name="car/update/[id]" options={{ title: 'Editar Bus' }} />
+      <Stack.Screen name='car-route/create' options={{ title: 'Crear Ruta' }} />
+      <Stack.Screen name='car-route/update/[id]' options={{ title: 'Editar Ruta' }} />
+      <Stack.Screen name='plans/create' options={{ title: 'Crear Plan' }} />
+      <Stack.Screen name='plans/update/[id]' options={{ title: 'Editar Plan' }} />
+    </Stack>
 
   );
 }

@@ -13,12 +13,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { theme } from '@/assets/css/style'
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { UserAvatar } from '@/components/navigation/UserAvatar';
-import { useSession } from '@/hooks/useSession';
-import { ROLES } from '@/constants/Rol';
-import { Link, router } from 'expo-router';
+
 import { RedirectRouter } from '@/components/RedirectRouter';
-import { DrawerToggleButton } from '@react-navigation/drawer';
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -51,22 +47,10 @@ export default function RootLayout() {
         >
             <RedirectRouter>
               <Stack >
-                  <Stack.Screen
-                    name="(admin)"
-                    options={{
-                      headerTitle: '',
-                      headerLeft: () => <DrawerToggleButton />,
-                      headerRight: () => <UserAvatar />,
-                    }}
-                  />
-                  <Stack.Screen  name="(tabs)" options={{ headerShown: false }} />
+                  <Stack.Screen name="(admin)" options={{headerShown: false}} />
                   <Stack.Screen name="(auths)" options={{ headerShown: false }} />
-                  <Stack.Screen name="(car_route)" options={{ headerShown: false }} />
                   <Stack.Screen name="(driver)" options={{ headerShown: false }} />
                   <Stack.Screen name="(student)" options={{ headerShown: false }} />
-                  <Stack.Screen name="(plans)" options={{ headerShown: false }} />
-                  <Stack.Screen name='(car)' options={{ headerShown: false }} />
-                  <Stack.Screen name='(bus-driver)' options={{ headerShown: false }} />
                   <Stack.Screen name="+not-found" />
               </Stack>
             </RedirectRouter>

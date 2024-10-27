@@ -10,7 +10,7 @@ import useSocket from '@/hooks/useSocket';
 
 export default function GenerateQr() {
 
-  const { messages, sendMessage } = useSocket('http://192.168.0.7:3000'); 
+  const { messages, sendMessage } = useSocket(process.env.EXPO_PUBLIC_HOST as string); 
 
   const [listAssign, setListAssign] = useState<any>([]);
   const [dataQr, setDataQr] = useState<any>(null);

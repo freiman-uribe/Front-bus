@@ -1,9 +1,8 @@
 
 import { Axios } from '@/resources/axios/axios';
-import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
-import { Button, Card, Text, Modal, Portal, PaperProvider, Icon } from 'react-native-paper';
+import { Button, Card, Text, Modal, Portal, PaperProvider, Icon, Snackbar } from 'react-native-paper';
 import { es } from 'date-fns/locale';
 import { format, parseISO } from 'date-fns';
 import QRCode from 'react-native-qrcode-svg';
@@ -11,28 +10,40 @@ import { BUS_DRIVER_STATUS } from '@/constants/Driver';
 import { Camera, useCameraDevice, useCameraPermission, useCodeScanner } from 'react-native-vision-camera';
 import { PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { jwtDecode } from 'jwt-decode';
 import { useSession } from '@/hooks/useSession';
 import { theme } from '@/assets/css/style';
+import React from 'react';
+import { PlanAlert } from '@/components/SnackbarMessage';
 
-export default function Car( { navigation }:any ) {
+
+export default function Student( { navigation }:any ) {
+  const {session, getSession} = useSession()
   const [listAssing, setListAssing] = useState([]);
 
   const getBusDriverData = async () => {
     try {
-      const { data } = await Axios.post<any>("/student-handler/get-bus-driver");
-      setListAssing(data)
-      console.log('🚀 ~ getBusDriverData ~ data:', data)
+      if (session && session?.active_plan) {
+        const { data } = await Axios.post<any>("/student-handler/get-bus-driver");
+        setListAssing(data)
+      }
     } catch (error) {
       console.error("🚀 ~ listRH ~ error:", error);
     }
   }
-  const {session} = useSession()
+
   useEffect(() => {
     getBusDriverData()
-  }, [])
+  }, [session])
+  
+  useFocusEffect(
+    React.useCallback(() => {
+      getSession()
+      return () => {};
+    }, [])
+  );
 
 
   const handleEntrada = async (id:string) => {
@@ -40,12 +51,13 @@ export default function Car( { navigation }:any ) {
   }
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false} >
+    <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} >
       <Text style={styles.title}>¡Hola, {session?.full_name} {session?.last_name}!</Text>
+      <PlanAlert session={session} />
       <Text style={styles.subtitle}>Rutas del día de hoy</Text>
       <View>
         {
-          listAssing.map((driverBus:any) => (
+          session?.active_plan && listAssing.map((driverBus:any) => (
             <Card style={styles.card}>
               <Card.Title
                 title="Ruta 1"
@@ -54,7 +66,7 @@ export default function Car( { navigation }:any ) {
                     <Text>{`Hora de recogida: ${ format(parseISO(driverBus.route.schedule_start), 'hh:mm a', { locale: es }) }`}</Text>
                   </View>
                 }
-                right={() => <Button style={{marginRight: 10}} compact mode='text' onPress={() => handleEntrada(driverBus.id)}>Registrar QR</Button>}
+                right={() => session?.active_plan ? <Button style={{marginRight: 10}} compact mode='text' onPress={() => handleEntrada(driverBus.id)}>Registrar QR</Button> : null}
               >
                 </Card.Title>
               <Card.Content>

@@ -13,6 +13,7 @@ export const useSession = () => {
   const getSession = async () => {
     try {
       const accessToken = await AsyncStorage.getItem('accessToken');
+      console.log('access token xddd', accessToken)
       if (accessToken) {
         const decoded = jwtDecode(accessToken) as SessionData;
         setSessionData(decoded);

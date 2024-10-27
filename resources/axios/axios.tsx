@@ -20,7 +20,6 @@ Axios.interceptors.request.use(async(config) => {
 
 Axios.interceptors.response.use(
   (response) => {
-    console.log(response, 'response interceptor')
     return response.data;
   },
   (error) => {

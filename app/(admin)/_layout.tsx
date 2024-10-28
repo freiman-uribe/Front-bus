@@ -23,6 +23,10 @@ export default function TabLayout() {
       <Stack.Screen name='car-route/update/[id]' options={{ title: 'Editar Ruta' }} />
       <Stack.Screen name='plans/create' options={{ title: 'Crear Plan' }} />
       <Stack.Screen name='plans/update/[id]' options={{ title: 'Editar Plan' }} />
+      <Stack.Screen name='users/create/[rol]' options={{ title: 'Crear Usuario' }} />
+      <Stack.Screen name='users/update/[id]' options={{ title: 'Editar Usuario' }} />
+      <Stack.Screen name='users/[id]' options={{ title: 'Detalles Usuario' }} />
+
     </Stack>
 
   );

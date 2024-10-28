@@ -15,9 +15,9 @@ export default function _layout() {
       <Drawer.Screen
         name="index" 
         options={{
-          drawerLabel: 'Inicio',
+          drawerLabel: 'Usuarios',
           title: 'overview',
-          drawerIcon: (props) => <DrawerIcon name="home-outline"  color={props.color}/>,
+          drawerIcon: (props) => <DrawerIcon name="person-outline"  color={props.color}/>,
           
         }}
       />

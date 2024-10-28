@@ -1,6 +1,8 @@
+import { useSession } from "@/hooks/useSession";
 import useSocket from "@/hooks/useSocket";
 import { Axios } from "@/resources/axios/axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ScrollView, View, Text } from "react-native";
 import {
@@ -20,7 +22,8 @@ const plans = [
 ];
 
 const Payment = () => {
-  const [plans, setPlans] = useState<any>([]); // Lista de planes de fetchPlans
+  const [plans, setPlans] = useState<any>([]);  // Lista de planes de fetchPlans
+  const {session, getSession} = useSession()
   const [selectedPlan, setSelectedPlan] = useState<any>(null); // Plan seleccionado
   const [wompiHTML, setWompiHTML] = useState<string | null>(null);
   const [visible, setVisible] = useState(false); // Modal de confirmación
@@ -32,7 +35,6 @@ const Payment = () => {
   const hideModal = () => setVisible(false);
 
   useEffect(() => {
-    console.log(messages, 'messagesmessages')
     if (messages.length > 0) {
       if (messages.includes('UPDATE_PLAN')) {
         fetchActivePlans();
@@ -46,6 +48,14 @@ const Payment = () => {
     setPlans(data);
   };
 
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log(session, 'session')
+      getSession()
+      return () => {};
+    }, [])
+  );
+
   const fetchActivePlans = async () => {
     const { data } = await Axios.get(`/payment/get-active-plan`);
 
@@ -54,6 +64,7 @@ const Payment = () => {
 
     await AsyncStorage.setItem('accessToken', accessToken);
     await AsyncStorage.setItem('refreshToken', refreshToken);
+    getSession()
     return data;
   };
 
@@ -81,7 +92,7 @@ const Payment = () => {
                   data-signature:integrity="${data.signature}"
                   data-customer-data:email="prueba@woompi.com"
                   data-customer-data:full-name="Lola Perez"
-                  data-redirect-url="https://seositecheckup.com/tools/url-redirects-test"
+                  data-redirect-url="https://3.128.90.2:3000/payment/checkout"
                 >
                 </script>
               </form>
@@ -143,6 +154,7 @@ const Payment = () => {
                       value={selectedPlan?.id === plan.id ? plan.id : null}
                     >
                       <RadioButton.Item
+                        disabled={session?.active_plan ? true : false}
                         label="Seleccionar este plan"
                         value={plan.id}
                       />
@@ -153,7 +165,7 @@ const Payment = () => {
               <Button
                 mode="contained"
                 onPress={showModal}
-                disabled={!selectedPlan} // Deshabilitar si no se seleccionó un plan
+                disabled={!selectedPlan || session?.active_plan ? true : false} // Deshabilitar si no se seleccionó un plan
                 style={{ marginTop: 16 }}
               >
                 Ir a pagar

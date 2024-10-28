@@ -92,7 +92,6 @@ const Payment = () => {
                   data-signature:integrity="${data.signature}"
                   data-customer-data:email="prueba@woompi.com"
                   data-customer-data:full-name="Lola Perez"
-                  data-redirect-url="https://3.128.90.2:3000/payment/checkout"
                 >
                 </script>
               </form>

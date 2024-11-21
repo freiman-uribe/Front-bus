@@ -6,16 +6,32 @@
     "development": {
       "distribution": "internal",
       "android": {
-        "gradleCommand": ":app:assembleDebug"
+        "gradleCommand": ":app:assembleDebug",
+        "env": {
+          "EXPO_PUBLIC_HOST": "${EXPO_PUBLIC_HOST}"
+        }
       },
       "ios": {
-        "buildConfiguration": "Debug"
+        "buildConfiguration": "Debug",
+        "env": {
+          "EXPO_PUBLIC_HOST": "${EXPO_PUBLIC_HOST}"
+        }
       }
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_HOST": "${EXPO_PUBLIC_HOST}"
+      }
     },
-    "production": {}
+    "production": {
+      "android": {
+        "buildType": "apk",
+        "env": {
+          "EXPO_PUBLIC_HOST": "${EXPO_PUBLIC_HOST}"
+        }
+      }
+    }
   },
   "submit": {
     "production": {}

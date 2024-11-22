@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Image, Alert, ScrollView } from 'react-native';
 import { Link, router } from 'expo-router';
 import { Text, TextInput, Button, Card, ActivityIndicator } from 'react-native-paper';
-import { Dropdown } from 'react-native-paper-dropdown';
+import { Dropdown } from 'react-native-element-dropdown'; // Importar la nueva librería
 import { Axios } from '@/resources/axios/axios';
 import { formattedSelect } from '@/resources/helpers';
 import { styles } from './styles/style';
@@ -139,29 +139,25 @@ export default function Register() {
                             style={styles.input}
                         />
 
-                        <View style={styles.input}>
-                            <Dropdown
-                                label='RH'
-                                mode='outlined'
-                                onSelect={(text) => setForm({ ...form, rh: text as any })}
-                                options={rhList}
-                                value={form.rh}
-                                hideMenuHeader={true}
-                                disabled={isLoading} // Desactiva el dropdown mientras carga
-                            />
-                        </View>
+                        <Dropdown
+                            style={styles.dropdown}
+                            data={rhList}
+                            labelField="label"
+                            valueField="value"
+                            placeholder="Seleccione su RH"
+                            value={form.rh}
+                            onChange={(item) => setForm({ ...form, rh: item.value })}
+                        />
 
-                        <View style={styles.input}>
-                            <Dropdown
-                                label='Eps'
-                                mode='outlined'
-                                onSelect={(text) => setForm({ ...form, eps: text as any })}
-                                options={epsList}
-                                value={form.eps}
-                                hideMenuHeader={true}
-                                disabled={isLoading} // Desactiva el dropdown mientras carga
-                            />
-                        </View>
+                        <Dropdown
+                            style={styles.dropdown}
+                            data={epsList}
+                            labelField="label"
+                            valueField="value"
+                            placeholder="Seleccione su EPS"
+                            value={form.eps}
+                            onChange={(item) => setForm({ ...form, eps: item.value })}
+                        />
 
                         <TextInput
                             mode='outlined'
@@ -182,18 +178,15 @@ export default function Register() {
                             style={styles.input}
                         />
 
-                        <View style={styles.input}>
-                            <Dropdown
-                                label='Código de programa'
-                                mode='outlined'
-                                onSelect={(text) => setForm({ ...form, code_program: text as any })}
-                                options={programList}
-                                value={form.code_program}
-                                hideMenuHeader={true}
-                                disabled={isLoading} // Desactiva el dropdown mientras carga
-                            />
-                        </View>
-
+                        <Dropdown
+                            style={styles.dropdown}
+                            data={programList}
+                            labelField="label"
+                            valueField="value"
+                            placeholder="Seleccione un Programa"
+                            value={form.code_program}
+                            onChange={(item) => setForm({ ...form, code_program: item.value })}
+                        />
 
                         <Button style={styles.btn} mode="contained" onPress={handleRegister}>
                             Registrarse

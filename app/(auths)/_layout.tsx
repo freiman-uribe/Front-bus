@@ -1,12 +1,11 @@
 
-import { Tabs } from 'expo-router';
+import { Stack, Tabs } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -23,24 +22,18 @@ export default function TabLayout() {
     }
   };
   return (
-    <Tabs
+    <Stack
       screenOptions={{
         headerShown: false,
       }}>
-      <Tabs.Screen
+      <Stack.Screen
         name="index"
-        options={{
-          title: 'Login',
-          tabBarButton:()=>null
-        }}
+       
       />
-      <Tabs.Screen
+      <Stack.Screen
         name="register"
-        options={{
-          title: 'Registrar',
-          tabBarButton:()=>null
-        }}
+       
       />
-    </Tabs>
+    </Stack>
   );
 }

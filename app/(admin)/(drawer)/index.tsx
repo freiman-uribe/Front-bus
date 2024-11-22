@@ -24,6 +24,7 @@ export default function Home() {
   const [filter, setFilter] = useState('');
   const [menuVisible, setMenuVisible] = useState(false);
   const ITEMS_PER_PAGE = 10;
+  const [error, setError] = useState("");
   
   const scaleValue = useRef(new Animated.Value(1)).current;
   const opacityValue = useRef(new Animated.Value(0)).current;
@@ -34,7 +35,7 @@ export default function Home() {
       setUsers(data);
       setFilteredUsers(data);
     } catch (error) {
-      alert('Error al cargar los usuarios');
+      setError("No se pudo cargar la lista de usuarios");
     }
   };
 
@@ -106,6 +107,10 @@ export default function Home() {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Lista de Usuarios</Text>
+
+      {error && (
+        <Text style={styles.errorText}>{error}</Text>
+      )}
       <TextInput
         placeholder="Buscar por nombre, apellido, email o rol"
         value={filter}
@@ -117,6 +122,7 @@ export default function Home() {
         keyExtractor={(item) => item.id}
         renderItem={renderUser}
         contentContainerStyle={styles.list}
+
       />
       <View style={styles.pagination}>
         <Button
@@ -255,5 +261,11 @@ const styles = StyleSheet.create({
   menuText: {
     fontSize: 16,
     color: '#333',
+  },
+  errorText: {
+    color: 'red', 
+    fontSize: 16,
+    marginBottom: 10,
+    textAlign: 'center',
   },
 });

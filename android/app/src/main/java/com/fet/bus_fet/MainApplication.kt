@@ -1,4 +1,4 @@
-package com.anonymous.myapp
+package com.fet.bus_fet
 
 import android.app.Application
 import android.content.res.Configuration

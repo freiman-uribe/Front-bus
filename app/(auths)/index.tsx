@@ -9,8 +9,8 @@ import { jwtDecode } from 'jwt-decode';
 import { ROLES } from '@/constants/Rol';
 
 export default function HomeScreen() {
-  const [user, setUser] = useState('ander_co@fet.com');
-  const [password, setPassword] = useState('hola.123');
+  const [user, setUser] = useState('');
+  const [password, setPassword] = useState('');
   const [hidePass, setHidePass] = useState(true);
 
   const handleLogin = async () => {
@@ -37,6 +37,7 @@ export default function HomeScreen() {
       console.error('Error al iniciar sesión:', JSON.stringify(error));
       Alert.alert('Error', 'Ha ocurrido un problema al iniciar sesión');
     }
+    
   };
   return (
     <ScrollView

@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
-import { View, FlatList } from 'react-native';
+import { View, FlatList, StyleSheet } from 'react-native';
 import { FAB, Card, IconButton, Text, Avatar, Searchbar } from 'react-native-paper';
-import { styles } from './styles/plans';
+import { theme } from '@/assets/css/style';
 import ConfirmDialog from '@/components/confirms/ConfirmDialog';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { Axios } from '@/resources/axios/axios';
@@ -133,3 +133,33 @@ export default function Plans() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+      flex: 1,
+      paddingTop: 10
+  },
+  searchBar: {
+      marginBottom: 10,
+      borderRadius: 8,
+      elevation: 10,
+      marginHorizontal: 10
+  },
+  card: {
+      marginBottom: 16,
+      marginHorizontal: 2,
+  },
+  avatarIcon: {
+      backgroundColor: '#6200ee'
+  },
+  cardActions: {
+      flexDirection: 'row',
+      alignItems: 'center'
+  },
+  floatButton: {
+      position: 'absolute',
+      right: 16,
+      bottom: 16,
+      backgroundColor: theme.colors.primary,
+  }
+});

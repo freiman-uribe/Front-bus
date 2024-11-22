@@ -2,7 +2,7 @@ import 'dotenv/config';
 
 export default {
   expo: {
-    name: "Bus-fet",
+    name: "Bus_fet",
     slug: "proyecto-bus",
     version: "1.0.0",
     orientation: "portrait",
@@ -26,7 +26,7 @@ export default {
         foregroundImage: "./assets/images/adaptive-icon.png",
         backgroundColor: "#ffffff"
       },
-      package: "com.fet.bus-fet",
+      package: "com.fet.bus_fet",
       permissions: [
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
@@ -52,7 +52,7 @@ export default {
       typedRoutes: true
     },
     extra: {
-      apiHost: process.env.EXPO_PUBLIC_HOST, // Carga la variable desde el .env
+      apiHost: process.env.EXPO_PUBLIC_HOST, 
       eas: {
         projectId: "1933cc32-9385-4e22-b48e-95643767ec5e"
       }

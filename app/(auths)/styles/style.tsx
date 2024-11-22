@@ -51,4 +51,8 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
     color: theme.colors.primary,
   },
+  loadingText: {
+    textAlign: 'center',
+    marginTop: 20
+  }
 })

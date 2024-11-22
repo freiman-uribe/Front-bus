@@ -2,7 +2,7 @@ import 'dotenv/config';
 
 export default {
   expo: {
-    name: "Bus_fet",
+    name: "Bus Fet",
     slug: "proyecto-bus",
     version: "1.0.0",
     orientation: "portrait",

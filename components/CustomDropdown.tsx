@@ -1,10 +1,11 @@
 import { Controller, FieldError } from 'react-hook-form';
-import { Dropdown } from 'react-native-paper-dropdown';
+import { Dropdown } from 'react-native-element-dropdown';
 import { View } from 'react-native';
 import { HelperText } from 'react-native-paper';
+import React from 'react';
 
 interface CustomDropdownProps {
-  control: any; 
+  control: any;
   name: string;
   label: string;
   options: { label: string; value: any }[];
@@ -17,15 +18,17 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({ control, name, l
     name={name}
     render={({ field: { onChange, value } }) => (
       <View style={{ marginBottom: 10 }}>
+
         <Dropdown
-          label={label}
-          mode="outlined"
-          options={options}
+          style={styles.dropdown}
+          data={options}
+          labelField="label"
+          valueField="value"
+          placeholder={label}
           value={value}
-          onSelect={onChange}
-          hideMenuHeader={true}
-          error={!!error}
+          onChange={(item) => onChange(item.value)}
         />
+        
         <HelperText type="error" visible={!!error}>
           {error?.message}
         </HelperText>
@@ -33,3 +36,14 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({ control, name, l
     )}
   />
 );
+
+const styles = {
+  dropdown: {
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: "black",
+    backgroundColor: "white",
+    borderRadius: 5,
+    padding: 15
+  },
+};

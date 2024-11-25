@@ -54,5 +54,13 @@ export const styles = StyleSheet.create({
   loadingText: {
     textAlign: 'center',
     marginTop: 20
+  },
+  dropdown: {
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: "black",
+    backgroundColor: "white",
+    borderRadius: 5,
+    padding: 15
   }
 })
